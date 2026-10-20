@@ -174,6 +174,9 @@
       </div>
       <div class="flex items-center gap-1.5 shrink-0">
         <div id="headerClock" class="hidden sm:block text-right text-[11px] bg-brand-deep/70 px-2.5 py-1 rounded-lg font-medium text-brand-fg"></div>
+        <button type="button" onclick="openOnboarding(true)" class="inline-flex items-center justify-center h-9 px-2.5 rounded-xl bg-brand-deep/50 hover:bg-brand-deep text-brand-fg text-[11px] font-extrabold transition" title="Como usar">
+          Ajuda
+        </button>
         <div class="relative">
           <button type="button" id="themeToggleBtn" onclick="toggleThemePanel()" class="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-brand-deep/50 hover:bg-brand-deep text-brand-fg transition" aria-expanded="false" aria-controls="themePanel" title="Aparência">
             <span id="themeToggleIcon" aria-hidden="true">🎨</span>
@@ -214,28 +217,28 @@
 
       <button onclick="setCategory('volume')" id="tab-volume" class="tab-btn flex flex-col items-center justify-center py-2 px-0.5 rounded-xl text-[11px] font-bold transition-all text-muted border-2 border-transparent hover:bg-soft">
         <span class="text-base mb-0.5">🧴</span>
-        <span>Volume</span>
+        <span>Líquidos</span>
       </button>
 
       <button onclick="setCategory('unit')" id="tab-unit" class="tab-btn flex flex-col items-center justify-center py-2 px-0.5 rounded-xl text-[11px] font-bold transition-all text-muted border-2 border-transparent hover:bg-soft">
         <span class="text-base mb-0.5">🧻</span>
-        <span>Unid.</span>
+        <span>Pacotes</span>
       </button>
 
       <button onclick="setCategory('list')" id="tab-list" class="tab-btn relative flex flex-col items-center justify-center py-2 px-0.5 rounded-xl text-[11px] font-bold transition-all text-muted border-2 border-transparent hover:bg-soft">
         <span class="text-base mb-0.5">🛒</span>
-        <span>Lista</span>
+        <span>Compras</span>
         <span id="listCountBadge" class="hidden absolute -top-1 -right-0.5 bg-brand text-brand-fg text-[9px] font-extrabold px-1.5 py-0.2 rounded-full shadow">0</span>
       </button>
 
       <button onclick="setCategory('history')" id="tab-history" class="tab-btn relative flex flex-col items-center justify-center py-2 px-0.5 rounded-xl text-[11px] font-bold transition-all text-muted border-2 border-transparent hover:bg-soft">
         <span class="text-base mb-0.5">💾</span>
-        <span>Salvos</span>
+        <span>Histórico</span>
         <span id="historyCountBadge" class="hidden absolute -top-1 -right-0.5 bg-market text-brand-fg text-[9px] font-extrabold px-1.5 py-0.2 rounded-full shadow">0</span>
       </button>
     </nav>
 
-    <!-- SEÇÃO DE COMPARAÇÃO (Aba Peso, Volume e Unidades) -->
+    <!-- SEÇÃO DE COMPARAÇÃO (Peso, Líquidos, Pacotes) -->
     <section id="compareSection">
       
       <!-- Card de Formulário -->
@@ -307,6 +310,10 @@
           <label for="prodName" class="block text-xs font-bold text-ink mb-1">
             🏷️ Produto / Marca <span class="font-normal text-faint">(opcional)</span>
           </label>
+          <div id="shoppingPickWrap" class="hidden mb-2">
+            <p class="text-[10px] font-bold text-muted mb-1.5 uppercase tracking-wide">Da sua lista</p>
+            <div id="shoppingPickChips" class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-0.5"></div>
+          </div>
           <input 
             type="text" 
             id="prodName" 
@@ -330,7 +337,7 @@
             >
           </div>
           <div class="col-span-2">
-            <label for="prodUnit" class="block text-xs font-bold text-ink mb-1">Unidade</label>
+            <label for="prodUnit" class="block text-xs font-bold text-ink mb-1">Medida</label>
             <select 
               id="prodUnit" 
               class="w-full px-2.5 py-2.5 rounded-xl border border-line text-sm font-bold bg-soft focus:outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
@@ -492,9 +499,9 @@
       
       <!-- Barra de Busca e Filtros do Histórico -->
       <div class="bg-surface rounded-2xl p-3.5 shadow-sm border border-line mb-3">
-        <div class="flex items-center justify-between mb-2 gap-2">
+        <div class="flex items-center justify-between mb-1 gap-2">
           <h2 class="text-sm font-extrabold text-ink flex items-center gap-1.5">
-            <span>💾</span> Histórico de Preços
+            <span>💾</span> Histórico de preços
           </h2>
           <button 
             type="button" 
@@ -504,9 +511,13 @@
             Apagar
           </button>
         </div>
+        <p class="text-[11px] text-muted mb-2 leading-snug">Tudo fica salvo só neste celular ou computador. Nada é enviado para a nuvem.</p>
+        <p class="text-[11px] text-brand-deep font-semibold mb-2.5 leading-snug bg-brand-soft border border-brand-mid rounded-xl px-2.5 py-2">
+          Se limpar o navegador ou trocar de celular, os dados somem. De vez em quando toque em <b>Backup JSON</b> e guarde o arquivo.
+        </p>
 
         <div class="flex items-center gap-1.5 flex-wrap mb-2.5">
-          <button type="button" onclick="exportBackupJson()" class="text-[11px] font-bold px-2.5 py-1.5 rounded-lg bg-canvas text-ink border border-line">Backup JSON</button>
+          <button type="button" onclick="exportBackupJson()" class="text-[11px] font-bold px-2.5 py-1.5 rounded-lg bg-brand text-brand-fg">Backup JSON</button>
           <button type="button" onclick="exportHistoryCsv()" class="text-[11px] font-bold px-2.5 py-1.5 rounded-lg bg-canvas text-ink border border-line">Exportar CSV</button>
           <button type="button" onclick="document.getElementById('importFileInput').click()" class="text-[11px] font-bold px-2.5 py-1.5 rounded-lg bg-brand-soft text-brand-deep border border-brand-mid">Importar</button>
           <input type="file" id="importFileInput" accept=".json,.csv,application/json,text/csv" class="hidden" onchange="importBackupFile(event)">
@@ -534,8 +545,8 @@
         <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar" id="historyFilterChips">
           <button onclick="setHistoryFilter('all')" id="hfilter-all" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-ink text-brand-fg shrink-0">Todos</button>
           <button onclick="setHistoryFilter('weight')" id="hfilter-weight" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-canvas text-muted shrink-0">⚖️ Peso (g/kg)</button>
-          <button onclick="setHistoryFilter('volume')" id="hfilter-volume" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-canvas text-muted shrink-0">🧴 Volume (ml/L)</button>
-          <button onclick="setHistoryFilter('unit')" id="hfilter-unit" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-canvas text-muted shrink-0">🧻 Unidades/Rolos</button>
+          <button onclick="setHistoryFilter('volume')" id="hfilter-volume" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-canvas text-muted shrink-0">🧴 Líquidos (ml/L)</button>
+          <button onclick="setHistoryFilter('unit')" id="hfilter-unit" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-canvas text-muted shrink-0">🧻 Pacotes/Rolos</button>
         </div>
       </div>
 
@@ -546,21 +557,95 @@
 
     <!-- SEÇÃO LISTA DE COMPRAS -->
     <section id="listSection" class="hidden">
-      <div class="bg-surface rounded-2xl p-3.5 shadow-sm border border-line mb-3">
-        <div class="flex items-center justify-between mb-1">
-          <h2 class="text-sm font-extrabold text-ink">🛒 Lista de Compras</h2>
-          <button type="button" onclick="requestClearShoppingList()" class="text-xs font-bold text-danger px-2 py-1 rounded-lg hover:bg-danger-soft">Limpar</button>
+      <div class="bg-surface rounded-2xl p-3.5 shadow-lift border border-line mb-3">
+        <h2 class="text-base font-extrabold text-ink mb-1">Lista de compras</h2>
+        <p class="text-[11px] text-muted mb-3 leading-snug">Tudo fica salvo só neste celular ou computador. Nada é enviado para a nuvem.</p>
+
+        <div class="grid grid-cols-3 gap-1.5 mb-3">
+          <button type="button" onclick="document.getElementById('shoppingPasteArea').focus()" class="py-2.5 px-2 rounded-xl text-[11px] font-extrabold bg-soft text-ink border border-line">Colar</button>
+          <button type="button" onclick="openSaveListModal()" class="py-2.5 px-2 rounded-xl text-[11px] font-extrabold bg-brand-soft text-brand-deep border border-brand-mid">Guardar</button>
+          <button type="button" onclick="shareShoppingList()" class="py-2.5 px-2 rounded-xl text-[11px] font-extrabold bg-brand text-brand-fg">Enviar</button>
         </div>
-        <p class="text-[11px] text-muted mb-3">Adicione itens da comparação ou do histórico. O total usa o preço efetivo salvo.</p>
-        <div class="rounded-xl bg-brand-soft border border-brand-mid px-3 py-2.5 flex items-center justify-between">
+
+        <div class="mb-3">
+          <label for="shoppingPasteArea" class="block text-xs font-bold text-ink mb-1">Recebeu uma lista? Cole aqui</label>
+          <p class="text-[11px] text-muted mb-1.5 leading-snug">WhatsApp, bloco de notas ou mensagem — um produto por linha.</p>
+          <textarea
+            id="shoppingPasteArea"
+            rows="3"
+            placeholder="Recebeu no WhatsApp? Cole aqui&#10;Leite&#10;Pão&#10;Papel higiênico"
+            class="w-full px-3 py-2.5 rounded-xl border border-line text-sm focus:outline-none focus:border-brand focus:ring-2 focus:ring-brand/20 resize-y min-h-[4.5rem]"
+          ></textarea>
+          <button
+            type="button"
+            onclick="importShoppingLines()"
+            class="mt-2 w-full py-2.5 rounded-xl font-extrabold text-sm bg-soft text-ink border border-line hover:bg-canvas active:scale-[0.99] transition"
+          >
+            Importar linhas
+          </button>
+        </div>
+
+        <div class="mb-3">
+          <label for="newProductInput" class="block text-xs font-bold text-ink mb-1">Novo produto</label>
+          <div class="flex gap-2">
+            <input
+              id="newProductInput"
+              type="text"
+              autocomplete="off"
+              placeholder="Ex.: Leite integral"
+              class="flex-1 min-w-0 px-3 py-2.5 rounded-xl border border-line text-sm focus:outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
+              onkeydown="if(event.key==='Enter'){event.preventDefault();addManualShoppingProduct();}"
+            />
+            <button
+              type="button"
+              onclick="addManualShoppingProduct()"
+              class="shrink-0 px-3.5 py-2.5 rounded-xl font-extrabold text-sm bg-soft text-ink border border-line hover:bg-canvas active:scale-[0.99] transition"
+            >Adicionar</button>
+          </div>
+        </div>
+
+        <div class="rounded-xl bg-brand-soft border border-brand-mid px-3 py-2.5 flex items-center justify-between gap-2">
           <span class="text-xs font-bold text-brand-deep">Total estimado</span>
-          <span id="shoppingTotal" class="text-lg font-black text-brand-deep">R$ 0,00</span>
+          <div class="flex items-center gap-2">
+            <span id="shoppingTotal" class="text-lg font-black text-brand-deep">R$ 0,00</span>
+            <button type="button" onclick="requestClearShoppingList()" class="text-[11px] font-bold text-danger px-2 py-1 rounded-lg hover:bg-danger-soft">Limpar</button>
+          </div>
         </div>
       </div>
-      <div id="shoppingList" class="space-y-2.5"></div>
+
+      <div id="shoppingList" class="space-y-2.5 mb-3"></div>
+
+      <div class="bg-surface rounded-2xl p-3.5 shadow-sm border border-line mb-3">
+        <h2 class="text-sm font-extrabold text-ink mb-1">Seus produtos</h2>
+        <p class="text-[11px] text-muted mb-2.5">Toque para colocar de novo na lista. × remove o nome guardado.</p>
+        <div id="productPoolChips" class="flex flex-wrap gap-2"></div>
+      </div>
+
+      <div class="bg-surface rounded-2xl p-3.5 shadow-sm border border-line mb-3">
+        <h2 class="text-sm font-extrabold text-ink mb-1">Listas guardadas</h2>
+        <p class="text-[11px] text-muted mb-2.5">Carregue depois, envie no WhatsApp ou exclua.</p>
+        <div id="savedListsContainer" class="space-y-2.5"></div>
+      </div>
     </section>
 
+    <p class="text-[11px] text-center text-muted px-2 pb-2 leading-snug">
+      Dados salvos só neste aparelho. Nada vai para a nuvem.
+    </p>
+
   </main>
+
+  <!-- Onboarding -->
+  <div id="onboardingOverlay" class="fixed inset-0 z-[60] hidden bg-scrim flex items-end sm:items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="onboardTitle">
+    <div class="bg-surface text-ink rounded-2xl w-full max-w-sm shadow-panel border border-line p-5">
+      <p id="onboardStepLabel" class="text-[11px] font-bold text-muted mb-1">Passo 1 de 3</p>
+      <h3 id="onboardTitle" class="text-lg font-extrabold text-ink mb-2">Monte sua lista</h3>
+      <p id="onboardBody" class="text-sm text-muted leading-relaxed mb-4">Recebeu uma lista no WhatsApp? Na aba Compras, cole aqui ou digite. Marque Buscando ou No carrinho.</p>
+      <div class="grid grid-cols-2 gap-2">
+        <button type="button" id="onboardSkipBtn" onclick="finishOnboarding()" class="py-2.5 rounded-xl text-xs font-bold bg-soft text-ink border border-line">Pular</button>
+        <button type="button" id="onboardNextBtn" onclick="advanceOnboarding()" class="py-2.5 rounded-xl text-xs font-extrabold bg-brand text-brand-fg">Próximo</button>
+      </div>
+    </div>
+  </div>
 
   <!-- Modal: Evolução de preço -->
   <div id="evolutionModal" class="fixed inset-0 z-50 hidden bg-scrim flex items-end sm:items-center justify-center p-3" onclick="onEvolutionBackdrop(event)">
@@ -608,6 +693,39 @@
     </div>
   </div>
 
+  <!-- Modal: Guardar lista -->
+  <div id="saveListModal" class="fixed inset-0 z-50 hidden bg-scrim backdrop-blur-xs flex items-center justify-center p-4" onclick="onSaveListBackdrop(event)">
+    <div class="bg-surface rounded-2xl max-w-xs w-full p-5 shadow-xl border border-line" role="dialog" aria-modal="true" aria-labelledby="saveListTitle">
+      <h3 id="saveListTitle" class="text-base font-extrabold text-ink mb-1">Guardar lista</h3>
+      <p class="text-xs text-muted mb-3 leading-relaxed">Dê um nome para reabrir depois.</p>
+      <label for="saveListNameInput" class="block text-xs font-bold text-ink mb-1">Nome</label>
+      <input
+        id="saveListNameInput"
+        type="text"
+        maxlength="80"
+        class="w-full px-3 py-2.5 rounded-xl border border-line text-sm focus:outline-none focus:border-brand focus:ring-2 focus:ring-brand/20 mb-4"
+        onkeydown="if(event.key==='Enter'){event.preventDefault();confirmSaveShoppingList();}"
+      />
+      <div class="grid grid-cols-2 gap-2">
+        <button type="button" onclick="closeSaveListModal()" class="py-2.5 px-3 rounded-xl font-bold text-xs bg-canvas text-ink hover:bg-soft">Cancelar</button>
+        <button type="button" onclick="confirmSaveShoppingList()" class="py-2.5 px-3 rounded-xl font-bold text-xs bg-brand text-brand-fg hover:opacity-95">Guardar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Carregar lista (substituir / somar) -->
+  <div id="loadListModal" class="fixed inset-0 z-50 hidden bg-scrim backdrop-blur-xs flex items-center justify-center p-4" onclick="onLoadListBackdrop(event)">
+    <div class="bg-surface rounded-2xl max-w-xs w-full p-5 shadow-xl border border-line" role="dialog" aria-modal="true" aria-labelledby="loadListTitle">
+      <h3 id="loadListTitle" class="text-base font-extrabold text-ink mb-1">Carregar lista</h3>
+      <p id="loadListDesc" class="text-xs text-muted mb-4 leading-relaxed"></p>
+      <div class="grid grid-cols-1 gap-2">
+        <button type="button" onclick="applyPendingSavedList('replace')" class="py-2.5 px-3 rounded-xl font-bold text-xs bg-brand text-brand-fg hover:opacity-95">Substituir lista atual</button>
+        <button type="button" onclick="applyPendingSavedList('merge')" class="py-2.5 px-3 rounded-xl font-bold text-xs bg-soft text-ink border border-line hover:bg-canvas">Somar à lista atual</button>
+        <button type="button" onclick="closeLoadListModal()" class="py-2.5 px-3 rounded-xl font-bold text-xs bg-canvas text-muted hover:bg-soft">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     // Chaves de armazenamento local
     const STORAGE_KEY_ITEMS = 'comparador_mercado_pro_items_v3';
@@ -615,6 +733,8 @@
     const STORAGE_KEY_MARKETS = 'comparador_mercado_pro_markets_v3';
     const STORAGE_KEY_LAST_MARKET = 'comparador_mercado_pro_last_market_v3';
     const STORAGE_KEY_SHOPPING = 'comparador_mercado_pro_shopping_v3';
+    const STORAGE_KEY_SAVED_LISTS = 'comparador_mercado_pro_saved_lists_v3';
+    const STORAGE_KEY_PRODUCT_POOL = 'comparador_mercado_pro_product_pool_v3';
 
     let currentCategory = 'weight';
     let currentHistoryFilter = 'all';
@@ -627,6 +747,12 @@
     };
     let historyItems = [];
     let shoppingList = [];
+    let savedLists = [];
+    let productPool = [];
+    let lastPickedShoppingId = null;
+    let pendingLoadListId = null;
+    let poolLongPressTimer = null;
+    let poolLongPressFired = false;
     const DEFAULT_MARKETS = ['Americanas', 'Atacadão', 'Assaí', 'Carrefour', 'Extra'];
     let savedMarkets = [...DEFAULT_MARKETS];
     let marketEditMode = false;
@@ -749,8 +875,11 @@
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
         closeConfirmModal();
+        closeSaveListModal();
+        closeLoadListModal();
         closeEvolutionModal();
         closeThemePanel();
+        finishOnboarding();
       }
     });
 
@@ -885,6 +1014,8 @@
         const rawHistory = localStorage.getItem(STORAGE_KEY_HISTORY);
         const rawMarkets = localStorage.getItem(STORAGE_KEY_MARKETS);
         const rawShopping = localStorage.getItem(STORAGE_KEY_SHOPPING);
+        const rawSavedLists = localStorage.getItem(STORAGE_KEY_SAVED_LISTS);
+        const rawProductPool = localStorage.getItem(STORAGE_KEY_PRODUCT_POOL);
         const lastMarket = localStorage.getItem(STORAGE_KEY_LAST_MARKET);
 
         if (rawItems) items = normalizeItemsState(JSON.parse(rawItems));
@@ -894,7 +1025,21 @@
         }
         if (rawShopping) {
           const parsedShopping = JSON.parse(rawShopping);
-          shoppingList = Array.isArray(parsedShopping) ? parsedShopping : [];
+          shoppingList = Array.isArray(parsedShopping)
+            ? parsedShopping.map(normalizeShoppingEntry).filter(Boolean)
+            : [];
+        }
+        if (rawSavedLists) {
+          const parsedLists = JSON.parse(rawSavedLists);
+          savedLists = Array.isArray(parsedLists)
+            ? parsedLists.map(normalizeSavedList).filter(Boolean)
+            : [];
+        }
+        if (rawProductPool) {
+          const parsedPool = JSON.parse(rawProductPool);
+          productPool = Array.isArray(parsedPool)
+            ? normalizeProductPool(parsedPool)
+            : [];
         }
         if (rawMarkets !== null) {
           const parsedMarkets = JSON.parse(rawMarkets);
@@ -910,7 +1055,10 @@
         items = { weight: [], volume: [], unit: [] };
         historyItems = [];
         shoppingList = [];
+        savedLists = [];
+        productPool = [];
       }
+      seedProductPoolFromKnownSources(true);
       updateHistoryBadge();
       updateListBadge();
       renderMarketSuggestions();
@@ -922,6 +1070,8 @@
         localStorage.setItem(STORAGE_KEY_ITEMS, JSON.stringify(items));
         localStorage.setItem(STORAGE_KEY_HISTORY, JSON.stringify(historyItems));
         localStorage.setItem(STORAGE_KEY_SHOPPING, JSON.stringify(shoppingList));
+        localStorage.setItem(STORAGE_KEY_SAVED_LISTS, JSON.stringify(savedLists));
+        localStorage.setItem(STORAGE_KEY_PRODUCT_POOL, JSON.stringify(productPool));
         localStorage.setItem(STORAGE_KEY_MARKETS, JSON.stringify(savedMarkets));
         const currentMarketVal = document.getElementById('marketName').value.trim();
         localStorage.setItem(STORAGE_KEY_LAST_MARKET, currentMarketVal);
@@ -1281,6 +1431,8 @@
       if (cat === 'list') {
         listSection.classList.remove('hidden');
         renderShoppingList();
+        renderProductPool();
+        renderSavedLists();
         return;
       }
 
@@ -1308,8 +1460,8 @@
         standardFields.classList.add('grid');
         unitFields.classList.add('hidden');
         unitFields.classList.remove('grid');
-        qtyLabel.textContent = 'Volume da Embalagem';
-        prodName.placeholder = 'Ex: Limpador Veja 480ml';
+        qtyLabel.textContent = 'Quantidade do líquido';
+        prodName.placeholder = 'Ex: Limpador Veja 480ml ou refrigerante 2L';
         unitSelect.innerHTML = `
           <option value="ml">Mililitros (ml)</option>
           <option value="l">Litros (L)</option>
@@ -1319,10 +1471,11 @@
         standardFields.classList.remove('grid');
         unitFields.classList.remove('hidden');
         unitFields.classList.add('grid');
-        prodName.placeholder = 'Ex: Papel Higiênico Neve 12 rolos';
+        prodName.placeholder = 'Ex: Papel higiênico 12 rolos ou bandeja 30 ovos';
       }
 
       renderQuickMeasureButtons();
+      renderShoppingPickChips();
       renderList();
     }
 
@@ -1470,12 +1623,24 @@
 
       saveToStorage();
 
+      // Se veio de um item da lista, marca como "já no carrinho"
+      if (lastPickedShoppingId != null) {
+        const picked = shoppingList.find(i => i.id === lastPickedShoppingId);
+        if (picked && shoppingStatusOf(picked) !== 'cart') {
+          picked.status = 'cart';
+          saveToStorage();
+          showToast(`✅ Comparado e marcado na lista: no carrinho.`);
+        }
+        lastPickedShoppingId = null;
+      }
+
       // Limpa apenas produto, preço e promoção (mantém o nome do mercado para o próximo item!)
       nameInput.value = '';
       priceInput.value = '';
       resetPromoFields();
 
       renderList();
+      renderShoppingPickChips();
 
       // Próximo item: foca quantidade (fluxo rápido no corredor)
       if (currentCategory === 'unit') {
@@ -1494,7 +1659,7 @@
         return;
       }
 
-      const catLabel = currentCategory === 'weight' ? 'Peso' : currentCategory === 'volume' ? 'Volume' : 'Unidades';
+      const catLabel = currentCategory === 'weight' ? 'Peso' : currentCategory === 'volume' ? 'Líquidos' : 'Pacotes';
       const lines = [
         `🛒 Comparador de Mercado — ${catLabel}`,
         `📅 ${getFormattedDateTime()}`,
@@ -1526,17 +1691,18 @@
       }
     }
 
-    function copyShareText(text) {
+    function copyShareText(text, successMsg) {
+      const okMsg = successMsg || '📋 Ranking copiado! Cole no WhatsApp.';
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(text).then(() => {
-          showToast('📋 Ranking copiado! Cole no WhatsApp.');
-        }).catch(() => fallbackCopy(text));
+          showToast(okMsg);
+        }).catch(() => fallbackCopy(text, okMsg));
       } else {
-        fallbackCopy(text);
+        fallbackCopy(text, okMsg);
       }
     }
 
-    function fallbackCopy(text) {
+    function fallbackCopy(text, successMsg) {
       const ta = document.createElement('textarea');
       ta.value = text;
       ta.setAttribute('readonly', '');
@@ -1546,11 +1712,138 @@
       ta.select();
       try {
         document.execCommand('copy');
-        showToast('📋 Ranking copiado! Cole no WhatsApp.');
+        showToast(successMsg || '📋 Ranking copiado! Cole no WhatsApp.');
       } catch (e) {
         showToast('Não foi possível copiar. Tente selecionar o texto manualmente.');
       }
       document.body.removeChild(ta);
+    }
+
+    function formatShoppingListShareText(listItems, listName) {
+      const items = Array.isArray(listItems) ? listItems : [];
+      const title = listName || 'Lista de compras';
+      const lines = [
+        `🛒 ${title}`,
+        `📅 ${getFormattedDateTime()}`,
+        ''
+      ];
+
+      if (items.length === 0) {
+        lines.push('(lista vazia)');
+      } else {
+        items.forEach((item) => {
+          const status = shoppingStatusOf(item) === 'cart' ? '✅ No carrinho' : '🔍 Buscando';
+          const qty = Number(item.qty) || 1;
+          const priceBit = item.effectivePrice
+            ? ` · R$ ${formatCurrency((Number(item.effectivePrice) || 0) * qty)}`
+            : '';
+          lines.push(`• ${item.name || 'Item'} (x${qty}) — ${status}${priceBit}`);
+        });
+        const total = items.reduce(
+          (sum, i) => sum + (Number(i.effectivePrice) || 0) * (Number(i.qty) || 1),
+          0
+        );
+        lines.push('');
+        lines.push(`Total estimado: R$ ${formatCurrency(total)}`);
+      }
+
+      lines.push('');
+      lines.push('Enviado pelo Comparador de Mercado (dados só no aparelho).');
+      return lines.join('\n').trim();
+    }
+
+    function shareTextViaSystem(text, successCopyMsg) {
+      if (navigator.share) {
+        navigator.share({ title: 'Lista de compras', text }).catch((err) => {
+          if (err && err.name === 'AbortError') return;
+          copyShareText(text, successCopyMsg);
+        });
+      } else {
+        copyShareText(text, successCopyMsg);
+      }
+    }
+
+    function shareShoppingList() {
+      if (shoppingList.length === 0) {
+        showToast('A lista de compras está vazia.');
+        return;
+      }
+      const text = formatShoppingListShareText(shoppingList, 'Lista de compras');
+      shareTextViaSystem(text, '📋 Lista copiada! Cole no WhatsApp.');
+    }
+
+    function shareSavedList(id) {
+      const list = savedLists.find((l) => l.id === id);
+      if (!list) return;
+      const items = Array.isArray(list.items) ? list.items : [];
+      if (items.length === 0) {
+        showToast('Essa lista guardada está vazia.');
+        return;
+      }
+      const text = formatShoppingListShareText(items, list.name || 'Lista de compras');
+      shareTextViaSystem(text, '📋 Lista copiada! Cole no WhatsApp.');
+    }
+
+    // ——— Onboarding ———
+    const ONBOARDING_KEY = 'comparador_onboarding_v1';
+    let onboardStep = 0;
+    const ONBOARD_STEPS = [
+      {
+        title: 'Monte sua lista de compras',
+        body: 'Recebeu uma lista no WhatsApp? Na aba Compras, cole aqui (um produto por linha) ou digite. Marque Buscando ou No carrinho.'
+      },
+      {
+        title: 'Compare o preço real',
+        body: 'Use Peso (comida), Líquidos (bebidas e limpeza) ou Pacotes (rolos, ovos). Toque um item Da sua lista para preencher o nome.'
+      },
+      {
+        title: 'Só neste aparelho — e na tela inicial',
+        body: 'Nada vai para a nuvem. Faça Backup JSON no Histórico de vez em quando. No celular: Instalar / Compartilhar → Adicionar à Tela de Início para abrir offline no mercado.'
+      }
+    ];
+
+    function openOnboarding(force) {
+      if (!force && localStorage.getItem(ONBOARDING_KEY)) return;
+      onboardStep = 0;
+      const overlay = document.getElementById('onboardingOverlay');
+      if (!overlay) return;
+      overlay.classList.remove('hidden');
+      renderOnboardingStep();
+    }
+
+    function renderOnboardingStep() {
+      const step = ONBOARD_STEPS[onboardStep];
+      if (!step) return;
+      document.getElementById('onboardStepLabel').textContent = `Passo ${onboardStep + 1} de ${ONBOARD_STEPS.length}`;
+      document.getElementById('onboardTitle').textContent = step.title;
+      document.getElementById('onboardBody').textContent = step.body;
+      const nextBtn = document.getElementById('onboardNextBtn');
+      const skipBtn = document.getElementById('onboardSkipBtn');
+      if (onboardStep >= ONBOARD_STEPS.length - 1) {
+        nextBtn.textContent = 'Entendi';
+        skipBtn.classList.add('hidden');
+      } else {
+        nextBtn.textContent = 'Próximo';
+        skipBtn.classList.remove('hidden');
+      }
+    }
+
+    function advanceOnboarding() {
+      if (onboardStep >= ONBOARD_STEPS.length - 1) {
+        finishOnboarding();
+        return;
+      }
+      onboardStep += 1;
+      renderOnboardingStep();
+    }
+
+    function finishOnboarding() {
+      const overlay = document.getElementById('onboardingOverlay');
+      if (!overlay || overlay.classList.contains('hidden')) return;
+      try {
+        localStorage.setItem(ONBOARDING_KEY, '1');
+      } catch (e) {}
+      overlay.classList.add('hidden');
     }
 
     function getDefaultProductName(cat, index) {
@@ -1683,9 +1976,9 @@
         if (currentCategory === 'weight') {
           exampleText = 'Exemplo: Compare Leite em Pó de <b>400g</b>, <b>500g</b>, <b>800g</b> e <b>1kg</b> no mesmo mercado ou entre mercados diferentes.';
         } else if (currentCategory === 'volume') {
-          exampleText = 'Exemplo: Compare produtos de limpeza de <b>200ml</b>, <b>320ml</b>, <b>480ml</b> e <b>2 Litros</b>.';
+          exampleText = 'Exemplo: Compare <b>líquidos e bebidas</b> de <b>200ml</b>, <b>480ml</b>, <b>1 L</b> e <b>2 L</b>.';
         } else {
-          exampleText = 'Exemplo: Compare pacotes de Papel Higiênico de <b>4, 6, 8, 12 ou 16 rolos</b> informando a metragem.';
+          exampleText = 'Exemplo: Compare <b>pacotes</b> de papel higiênico (<b>4 a 16 rolos</b>) ou ovos, informando a quantidade.';
         }
 
         container.innerHTML = `
@@ -1813,8 +2106,8 @@
 
       const categoryIcons = {
         weight: '⚖️ Peso',
-        volume: '🧴 Volume',
-        unit: '🧻 Unidades'
+        volume: '🧴 Líquidos',
+        unit: '🧻 Pacotes'
       };
 
       container.innerHTML = filtered.map(item => {
@@ -1867,8 +2160,234 @@
     }
 
     // ——— Lista de compras ———
+    function shoppingStatusOf(item) {
+      if (!item) return 'seeking';
+      if (item.status === 'cart' || item.inCart === true) return 'cart';
+      return 'seeking';
+    }
+
+    function normalizeShoppingEntry(raw) {
+      if (!raw || typeof raw !== 'object') return null;
+      const name = String(raw.name || '').trim();
+      if (!name) return null;
+      return {
+        ...raw,
+        name,
+        qty: Math.max(1, Number(raw.qty) || 1),
+        effectivePrice: Number(raw.effectivePrice) || 0,
+        rawPrice: Number(raw.rawPrice) || 0,
+        status: shoppingStatusOf(raw)
+      };
+    }
+
+    function productNameKey(name) {
+      return String(name || '').trim().toLowerCase();
+    }
+
+    function normalizeProductPool(rawList) {
+      const out = [];
+      const seen = new Set();
+      (Array.isArray(rawList) ? rawList : []).forEach((raw) => {
+        const name = String(raw || '').trim();
+        if (!name) return;
+        const key = productNameKey(name);
+        if (seen.has(key)) return;
+        seen.add(key);
+        out.push(name);
+      });
+      return out;
+    }
+
+    function normalizeSavedList(raw) {
+      if (!raw || typeof raw !== 'object') return null;
+      const name = String(raw.name || '').trim();
+      if (!name) return null;
+      const items = Array.isArray(raw.items)
+        ? raw.items.map(normalizeShoppingEntry).filter(Boolean)
+        : [];
+      return {
+        id: raw.id || (Date.now() + Math.floor(Math.random() * 10000)),
+        name,
+        savedAt: raw.savedAt || getFormattedDateTime(),
+        items
+      };
+    }
+
+    function snapshotShoppingItems(list) {
+      return (Array.isArray(list) ? list : [])
+        .map((item) => {
+          const entry = normalizeShoppingEntry(item);
+          if (!entry) return null;
+          return {
+            name: entry.name,
+            market: entry.market || '',
+            category: entry.category || '',
+            measureSummary: entry.measureSummary || '',
+            effectivePrice: Number(entry.effectivePrice) || 0,
+            rawPrice: Number(entry.rawPrice) || 0,
+            mainLabel: entry.mainLabel || '',
+            qty: Math.max(1, Number(entry.qty) || 1),
+            status: shoppingStatusOf(entry),
+            addedAt: entry.addedAt || getFormattedDateTime()
+          };
+        })
+        .filter(Boolean);
+    }
+
+    function cloneShoppingItemsAsActive(itemsSource, { resetStatus = false } = {}) {
+      return snapshotShoppingItems(itemsSource).map((item, idx) => ({
+        ...item,
+        id: Date.now() + Math.floor(Math.random() * 10000) + idx,
+        status: resetStatus ? 'seeking' : shoppingStatusOf(item),
+        addedAt: getFormattedDateTime()
+      }));
+    }
+
+    function registerProductNames(names, { persist = true } = {}) {
+      const list = Array.isArray(names) ? names : [names];
+      let changed = false;
+      const seen = new Set(productPool.map(productNameKey));
+      list.forEach((raw) => {
+        const name = String(raw || '').trim();
+        if (!name) return;
+        const key = productNameKey(name);
+        if (seen.has(key)) return;
+        seen.add(key);
+        productPool.push(name);
+        changed = true;
+      });
+      if (changed && persist) {
+        try {
+          localStorage.setItem(STORAGE_KEY_PRODUCT_POOL, JSON.stringify(productPool));
+        } catch (e) {
+          console.error('Erro ao gravar product pool:', e);
+        }
+      }
+      return changed;
+    }
+
+    function seedProductPoolFromKnownSources(persist = true) {
+      const names = [];
+      shoppingList.forEach((i) => names.push(i.name));
+      savedLists.forEach((list) => {
+        (list.items || []).forEach((i) => names.push(i.name));
+      });
+      historyItems.forEach((i) => names.push(i.name));
+      registerProductNames(names, { persist });
+    }
+
+    function removeFromProductPool(name) {
+      const key = productNameKey(name);
+      const next = productPool.filter((n) => productNameKey(n) !== key);
+      if (next.length === productPool.length) return;
+      productPool = next;
+      saveToStorage();
+      renderProductPool();
+      showToast(`Excluído dos seus produtos: ${name}`);
+    }
+
+    function defaultSavedListName() {
+      const now = new Date();
+      const day = String(now.getDate()).padStart(2, '0');
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      return `Lista ${day}/${month}`;
+    }
+
+    function formatSavedAtShort(savedAt) {
+      const s = String(savedAt || '');
+      const m = s.match(/^(\d{2}\/\d{2}\/\d{4})/);
+      return m ? m[1] : (s || '—');
+    }
+
+    function cleanShoppingLine(line) {
+      return String(line || '')
+        .replace(/^\s*[\d]+[\.\)\-–:—]\s*/, '')
+        .replace(/^\s*[-•*–—▪︎□■]+\s*/, '')
+        .trim();
+    }
+
+    function importShoppingLines() {
+      const area = document.getElementById('shoppingPasteArea');
+      const text = area ? area.value : '';
+      const lines = String(text).split(/\r?\n/);
+      const names = [];
+      const seen = new Set();
+
+      lines.forEach((line) => {
+        const cleaned = cleanShoppingLine(line);
+        if (!cleaned) return;
+        const key = cleaned.toLowerCase();
+        if (seen.has(key)) return;
+        seen.add(key);
+        names.push(cleaned);
+      });
+
+      if (names.length === 0) {
+        showToast('⚠️ Cole pelo menos uma linha com o nome do produto.');
+        if (area) area.focus();
+        return;
+      }
+
+      const existing = new Set(
+        shoppingList.map(i => String(i.name || '').trim().toLowerCase()).filter(Boolean)
+      );
+      let added = 0;
+      // Preserva ordem do texto colado (primeiro da lista = topo)
+      const batch = [];
+      names.forEach((name) => {
+        if (existing.has(name.toLowerCase())) return;
+        existing.add(name.toLowerCase());
+        batch.push({
+          id: Date.now() + Math.floor(Math.random() * 10000) + added,
+          name,
+          market: '',
+          category: '',
+          measureSummary: '',
+          effectivePrice: 0,
+          rawPrice: 0,
+          mainLabel: '',
+          qty: 1,
+          status: 'seeking',
+          addedAt: getFormattedDateTime()
+        });
+        added += 1;
+      });
+
+      if (added === 0) {
+        showToast('Esses itens já estão na lista.');
+        return;
+      }
+
+      shoppingList = [...batch, ...shoppingList];
+      registerProductNames(names);
+      if (area) area.value = '';
+      saveToStorage();
+      renderShoppingList();
+      renderShoppingPickChips();
+      renderProductPool();
+      showToast(`🛒 ${added} item(ns) importado(s).`);
+    }
+
+    function addManualShoppingProduct() {
+      const input = document.getElementById('newProductInput');
+      const name = input ? String(input.value || '').trim() : '';
+      if (!name) {
+        showToast('⚠️ Digite o nome do produto.');
+        if (input) input.focus();
+        return;
+      }
+      const exists = shoppingList.some((i) => productNameKey(i.name) === productNameKey(name));
+      if (exists) {
+        showToast('Esse item já está na lista.');
+        return;
+      }
+      pushShoppingItem({ name, status: 'seeking' });
+      if (input) input.value = '';
+      renderShoppingList();
+    }
+
     function pushShoppingItem(source) {
-      const entry = {
+      const entry = normalizeShoppingEntry({
         id: Date.now() + Math.floor(Math.random() * 1000),
         name: source.name,
         market: source.market,
@@ -1877,12 +2396,274 @@
         effectivePrice: Number(source.effectivePrice) || 0,
         rawPrice: Number(source.rawPrice) || 0,
         mainLabel: source.mainLabel || '',
-        qty: 1,
+        qty: Math.max(1, Number(source.qty) || 1),
+        status: source.status || 'seeking',
         addedAt: getFormattedDateTime()
-      };
+      });
+      if (!entry) return;
       shoppingList.unshift(entry);
+      registerProductNames([entry.name]);
       saveToStorage();
+      renderShoppingPickChips();
+      renderProductPool();
       showToast(`🛒 "${entry.name}" entrou na lista.`);
+    }
+
+    function addProductFromPool(name) {
+      if (poolLongPressFired) {
+        poolLongPressFired = false;
+        return;
+      }
+      const clean = String(name || '').trim();
+      if (!clean) return;
+      const exists = shoppingList.some((i) => productNameKey(i.name) === productNameKey(clean));
+      if (exists) {
+        showToast('Esse item já está na lista.');
+        return;
+      }
+      pushShoppingItem({ name: clean, status: 'seeking' });
+      renderShoppingList();
+    }
+
+    function onPoolChipPointerDown(name) {
+      poolLongPressFired = false;
+      if (poolLongPressTimer) clearTimeout(poolLongPressTimer);
+      poolLongPressTimer = setTimeout(() => {
+        poolLongPressFired = true;
+        poolLongPressTimer = null;
+        if (navigator.vibrate) navigator.vibrate(20);
+        removeFromProductPool(name);
+      }, 550);
+    }
+
+    function onPoolChipPointerUp() {
+      if (poolLongPressTimer) {
+        clearTimeout(poolLongPressTimer);
+        poolLongPressTimer = null;
+      }
+    }
+
+    function openSaveListModal() {
+      if (shoppingList.length === 0) {
+        showToast('A lista atual está vazia — adicione itens antes de guardar.');
+        return;
+      }
+      const input = document.getElementById('saveListNameInput');
+      if (input) input.value = defaultSavedListName();
+      document.getElementById('saveListModal').classList.remove('hidden');
+      setTimeout(() => {
+        if (input) {
+          input.focus();
+          input.select();
+        }
+      }, 50);
+    }
+
+    function closeSaveListModal() {
+      document.getElementById('saveListModal').classList.add('hidden');
+    }
+
+    function onSaveListBackdrop(event) {
+      if (event.target === document.getElementById('saveListModal')) closeSaveListModal();
+    }
+
+    function confirmSaveShoppingList() {
+      const input = document.getElementById('saveListNameInput');
+      const name = String(input && input.value ? input.value : '').trim() || defaultSavedListName();
+      if (shoppingList.length === 0) {
+        showToast('A lista atual está vazia.');
+        closeSaveListModal();
+        return;
+      }
+      const snapshot = snapshotShoppingItems(shoppingList);
+      savedLists.unshift({
+        id: Date.now() + Math.floor(Math.random() * 10000),
+        name,
+        savedAt: getFormattedDateTime(),
+        items: snapshot
+      });
+      registerProductNames(snapshot.map((i) => i.name));
+      saveToStorage();
+      closeSaveListModal();
+      renderSavedLists();
+      renderProductPool();
+      showToast(`💾 Lista guardada: ${name}`);
+      maybeRemindBackup();
+    }
+
+    const BACKUP_REMIND_KEY = 'comparador_backup_remind_count_v1';
+    function maybeRemindBackup() {
+      let count = 0;
+      try {
+        count = parseInt(localStorage.getItem(BACKUP_REMIND_KEY) || '0', 10) || 0;
+      } catch (e) {}
+      count += 1;
+      try {
+        localStorage.setItem(BACKUP_REMIND_KEY, String(count));
+      } catch (e) {}
+      // A cada 2 listas guardadas, lembra de exportar backup
+      if (count % 2 === 0) {
+        setTimeout(() => {
+          showToast('💡 Lembrete: no Histórico, use Backup JSON para não perder dados se limpar o navegador.');
+        }, 2200);
+      }
+    }
+
+    function requestLoadSavedList(id) {
+      const list = savedLists.find((l) => l.id === id);
+      if (!list) return;
+      pendingLoadListId = id;
+      if (shoppingList.length === 0) {
+        applyPendingSavedList('replace');
+        return;
+      }
+      const desc = document.getElementById('loadListDesc');
+      if (desc) {
+        desc.textContent = `"${list.name}" tem ${list.items.length} item(ns). A lista atual tem ${shoppingList.length}. Substituir ou somar?`;
+      }
+      document.getElementById('loadListModal').classList.remove('hidden');
+    }
+
+    function closeLoadListModal() {
+      pendingLoadListId = null;
+      document.getElementById('loadListModal').classList.add('hidden');
+    }
+
+    function onLoadListBackdrop(event) {
+      if (event.target === document.getElementById('loadListModal')) closeLoadListModal();
+    }
+
+    function applyPendingSavedList(mode) {
+      const id = pendingLoadListId;
+      const list = savedLists.find((l) => l.id === id);
+      closeLoadListModal();
+      if (!list) return;
+
+      if (mode === 'merge') {
+        const existing = new Set(shoppingList.map((i) => productNameKey(i.name)));
+        const batch = [];
+        let added = 0;
+        (list.items || []).forEach((item, idx) => {
+          const key = productNameKey(item.name);
+          if (!key || existing.has(key)) return;
+          existing.add(key);
+          batch.push({
+            ...item,
+            id: Date.now() + Math.floor(Math.random() * 10000) + idx,
+            status: shoppingStatusOf(item) || 'seeking',
+            qty: Math.max(1, Number(item.qty) || 1),
+            addedAt: getFormattedDateTime()
+          });
+          added += 1;
+        });
+        if (added === 0) {
+          showToast('Nenhum item novo para somar (já estão na lista).');
+          return;
+        }
+        shoppingList = [...batch, ...shoppingList];
+        registerProductNames(batch.map((i) => i.name));
+        saveToStorage();
+        renderShoppingList();
+        renderShoppingPickChips();
+        renderProductPool();
+        showToast(`🛒 ${added} item(ns) somado(s) de "${list.name}".`);
+        return;
+      }
+
+      shoppingList = cloneShoppingItemsAsActive(list.items);
+      lastPickedShoppingId = null;
+      registerProductNames(shoppingList.map((i) => i.name));
+      saveToStorage();
+      renderShoppingList();
+      renderShoppingPickChips();
+      renderProductPool();
+      showToast(`🛒 Lista carregada: ${list.name}`);
+    }
+
+    function requestDeleteSavedList(id) {
+      const list = savedLists.find((l) => l.id === id);
+      if (!list) return;
+      openConfirmModal(
+        'Excluir lista guardada?',
+        `"${list.name}" será removida. Isso não altera a lista atual.`,
+        () => {
+          savedLists = savedLists.filter((l) => l.id !== id);
+          saveToStorage();
+          renderSavedLists();
+          showToast('Lista guardada excluída.');
+        }
+      );
+    }
+
+    function renderProductPool() {
+      const container = document.getElementById('productPoolChips');
+      if (!container) return;
+
+      if (productPool.length === 0) {
+        container.innerHTML = `
+          <div class="w-full rounded-xl border border-dashed border-line px-3 py-4 text-center text-muted">
+            <p class="text-xs font-bold text-ink mb-1">Nenhum produto salvo ainda</p>
+            <p class="text-[11px] leading-relaxed">Cole uma lista, digite em <b>Novo produto</b> ou adicione da comparação — os nomes aparecem aqui para reutilizar.</p>
+          </div>`;
+        return;
+      }
+
+      const sorted = [...productPool].sort((a, b) => a.localeCompare(b, 'pt-BR', { sensitivity: 'base' }));
+      container.innerHTML = sorted.map((name) => {
+        const safeAttr = escapeHtml(name).replace(/"/g, '&quot;');
+        return `
+          <div class="inline-flex items-center max-w-full rounded-xl border border-brand-mid bg-brand-soft overflow-hidden">
+            <button
+              type="button"
+              class="max-w-[10.5rem] truncate px-3 py-2 text-[11px] font-extrabold text-brand-deep active:scale-[0.98] transition"
+              title="${safeAttr}"
+              onclick="addProductFromPool(${JSON.stringify(name)})"
+              onpointerdown="onPoolChipPointerDown(${JSON.stringify(name)})"
+              onpointerup="onPoolChipPointerUp()"
+              onpointerleave="onPoolChipPointerUp()"
+              onpointercancel="onPoolChipPointerUp()"
+            >${escapeHtml(name)}</button>
+            <button
+              type="button"
+              class="shrink-0 px-2 py-2 text-[11px] font-bold text-muted hover:text-danger hover:bg-danger-soft border-l border-brand-mid"
+              title="Excluir dos seus produtos"
+              aria-label="Excluir ${safeAttr}"
+              onclick="event.stopPropagation();removeFromProductPool(${JSON.stringify(name)})"
+            >×</button>
+          </div>`;
+      }).join('');
+    }
+
+    function renderSavedLists() {
+      const container = document.getElementById('savedListsContainer');
+      if (!container) return;
+
+      if (savedLists.length === 0) {
+        container.innerHTML = `
+          <div class="rounded-xl border border-dashed border-line px-3 py-4 text-center text-muted">
+            <p class="text-xs font-bold text-ink mb-1">Nenhuma lista guardada</p>
+            <p class="text-[11px] leading-relaxed">Monte a lista atual e toque em <b>Guardar lista</b> para reabrir depois.</p>
+          </div>`;
+        return;
+      }
+
+      container.innerHTML = savedLists.map((list) => {
+        const count = (list.items || []).length;
+        return `
+          <div class="rounded-xl border border-line bg-soft/60 px-3 py-3">
+            <div class="flex items-start justify-between gap-2">
+              <div class="min-w-0">
+                <h3 class="text-sm font-extrabold text-ink truncate">${escapeHtml(list.name)}</h3>
+                <p class="text-[11px] text-muted mt-0.5">${count} item(ns) · ${escapeHtml(formatSavedAtShort(list.savedAt))}</p>
+              </div>
+            </div>
+            <div class="grid grid-cols-3 gap-1.5 mt-2.5">
+              <button type="button" onclick="requestLoadSavedList(${list.id})" class="py-2 px-2 rounded-xl text-[11px] font-extrabold bg-brand text-brand-fg hover:opacity-95">Carregar</button>
+              <button type="button" onclick="shareSavedList(${list.id})" class="py-2 px-2 rounded-xl text-[11px] font-extrabold bg-soft text-ink border border-line">Enviar</button>
+              <button type="button" onclick="requestDeleteSavedList(${list.id})" class="py-2 px-2 rounded-xl text-[11px] font-extrabold text-danger bg-surface border border-line hover:bg-danger-soft">Excluir</button>
+            </div>
+          </div>`;
+      }).join('');
     }
 
     function addToShoppingListFromCompare(id) {
@@ -1905,10 +2686,28 @@
       renderShoppingList();
     }
 
-    function removeShoppingItem(id) {
-      shoppingList = shoppingList.filter(i => i.id !== id);
+    function setShoppingStatus(id, status) {
+      const item = shoppingList.find(i => i.id === id);
+      if (!item) return;
+      item.status = status === 'cart' ? 'cart' : 'seeking';
+      delete item.inCart;
       saveToStorage();
       renderShoppingList();
+      renderShoppingPickChips();
+    }
+
+    function toggleShoppingStatus(id) {
+      const item = shoppingList.find(i => i.id === id);
+      if (!item) return;
+      setShoppingStatus(id, shoppingStatusOf(item) === 'cart' ? 'seeking' : 'cart');
+    }
+
+    function removeShoppingItem(id) {
+      shoppingList = shoppingList.filter(i => i.id !== id);
+      if (lastPickedShoppingId === id) lastPickedShoppingId = null;
+      saveToStorage();
+      renderShoppingList();
+      renderShoppingPickChips();
     }
 
     function requestClearShoppingList() {
@@ -1921,11 +2720,64 @@
         'Todos os itens da lista serão removidos.',
         () => {
           shoppingList = [];
+          lastPickedShoppingId = null;
           saveToStorage();
           renderShoppingList();
+          renderShoppingPickChips();
           showToast('Lista de compras limpa.');
         }
       );
+    }
+
+    function selectShoppingItemForCompare(id) {
+      const item = shoppingList.find(i => i.id === id);
+      if (!item) return;
+      lastPickedShoppingId = id;
+      const nameInput = document.getElementById('prodName');
+      nameInput.value = item.name;
+      renderShoppingPickChips();
+      showToast(`📌 ${item.name} — informe medida e preço.`);
+
+      if (currentCategory === 'unit') {
+        document.getElementById('packUnits').focus();
+      } else {
+        document.getElementById('prodQty').focus();
+      }
+      if (navigator.vibrate) navigator.vibrate(10);
+    }
+
+    function renderShoppingPickChips() {
+      const wrap = document.getElementById('shoppingPickWrap');
+      const chips = document.getElementById('shoppingPickChips');
+      if (!wrap || !chips) return;
+
+      if (!['weight', 'volume', 'unit'].includes(currentCategory) || shoppingList.length === 0) {
+        wrap.classList.add('hidden');
+        chips.innerHTML = '';
+        return;
+      }
+
+      const seeking = shoppingList.filter(i => shoppingStatusOf(i) === 'seeking');
+      const inCart = shoppingList.filter(i => shoppingStatusOf(i) === 'cart');
+      const ordered = [...seeking, ...inCart];
+
+      wrap.classList.remove('hidden');
+      chips.innerHTML = ordered.map(item => {
+        const isCart = shoppingStatusOf(item) === 'cart';
+        const selected = lastPickedShoppingId === item.id;
+        const base = isCart
+          ? 'opacity-55 bg-soft text-muted border-line'
+          : 'bg-brand-soft text-brand-deep border-brand-mid';
+        const ring = selected ? ' ring-2 ring-brand border-brand' : '';
+        const prefix = isCart ? '✓ ' : '';
+        return `
+          <button
+            type="button"
+            onclick="selectShoppingItemForCompare(${item.id})"
+            class="shrink-0 max-w-[11rem] truncate px-3 py-2 rounded-xl text-[11px] font-extrabold border ${base}${ring} active:scale-[0.98] transition"
+            title="${escapeHtml(item.name)}"
+          >${prefix}${escapeHtml(item.name)}</button>`;
+      }).join('');
     }
 
     function renderShoppingList() {
@@ -1938,26 +2790,58 @@
         container.innerHTML = `
           <div class="bg-surface rounded-2xl p-6 text-center border border-dashed border-line text-muted">
             <div class="text-3xl mb-2">🛒</div>
-            <p class="text-xs font-bold text-ink mb-1">Lista vazia</p>
-            <p class="text-[11px] leading-relaxed">Na comparação ou no histórico, toque em <b>🛒 Lista</b> para adicionar itens e ver o total estimado.</p>
+            <p class="text-xs font-bold text-ink mb-1">Lista de compras vazia</p>
+            <p class="text-[11px] leading-relaxed">Cole itens acima, digite em <b>Novo produto</b>, toque em <b>Seus produtos</b>, ou na comparação use <b>🛒 Lista</b>.</p>
           </div>`;
         return;
       }
 
-      container.innerHTML = shoppingList.map(item => {
+      // Buscando primeiro, depois no carrinho
+      const ordered = [
+        ...shoppingList.filter(i => shoppingStatusOf(i) === 'seeking'),
+        ...shoppingList.filter(i => shoppingStatusOf(i) === 'cart')
+      ];
+
+      container.innerHTML = ordered.map(item => {
         const line = (Number(item.effectivePrice) || 0) * (Number(item.qty) || 1);
+        const isCart = shoppingStatusOf(item) === 'cart';
+        const cardTone = isCart
+          ? 'bg-soft border-line opacity-90'
+          : 'bg-surface border-brand-mid';
+        const nameTone = isCart ? 'text-muted line-through' : 'text-ink';
+        const metaBits = [];
+        if (item.market) metaBits.push(`🏪 ${escapeHtml(item.market)}`);
+        if (item.measureSummary) metaBits.push(escapeHtml(item.measureSummary));
+        const hasPrice = Number(item.effectivePrice) > 0;
+
         return `
-          <div class="bg-surface rounded-2xl p-3.5 border border-line">
+          <div class="rounded-2xl p-3.5 border ${cardTone}">
             <div class="flex items-start justify-between gap-2">
               <div class="min-w-0 flex-1">
-                <h3 class="text-sm font-extrabold text-ink truncate">${escapeHtml(item.name)}</h3>
-                <p class="text-[11px] text-muted mt-0.5">🏪 ${escapeHtml(item.market)}${item.measureSummary ? ' • ' + escapeHtml(item.measureSummary) : ''}</p>
-                <p class="text-[11px] font-semibold text-muted mt-1">R$ ${formatCurrency(item.effectivePrice)} / un. efetiva</p>
+                <h3 class="text-sm font-extrabold truncate ${nameTone}">${escapeHtml(item.name)}</h3>
+                ${metaBits.length ? `<p class="text-[11px] text-muted mt-0.5">${metaBits.join(' • ')}</p>` : ''}
+                ${hasPrice ? `<p class="text-[11px] font-semibold text-muted mt-1">R$ ${formatCurrency(item.effectivePrice)} / un. efetiva</p>` : `<p class="text-[11px] text-faint mt-1">Sem preço ainda — use nas abas Comparar</p>`}
               </div>
               <div class="text-right shrink-0">
-                <div class="text-base font-black text-brand-deep">R$ ${formatCurrency(line)}</div>
+                ${hasPrice ? `<div class="text-base font-black text-brand-deep">R$ ${formatCurrency(line)}</div>` : `<div class="text-[10px] font-bold text-faint">—</div>`}
               </div>
             </div>
+
+            <div class="grid grid-cols-2 gap-1.5 mt-2.5">
+              <button
+                type="button"
+                onclick="setShoppingStatus(${item.id}, 'seeking')"
+                class="py-2.5 px-2 rounded-xl text-[11px] font-extrabold border transition ${!isCart ? 'bg-info-soft text-info border-info' : 'bg-surface text-muted border-line'}"
+                aria-pressed="${!isCart}"
+              >🔍 Buscando</button>
+              <button
+                type="button"
+                onclick="setShoppingStatus(${item.id}, 'cart')"
+                class="py-2.5 px-2 rounded-xl text-[11px] font-extrabold border transition ${isCart ? 'bg-brand-soft text-brand-deep border-brand' : 'bg-surface text-muted border-line'}"
+                aria-pressed="${isCart}"
+              >🛒 No carrinho</button>
+            </div>
+
             <div class="flex items-center justify-between mt-2.5 pt-2 border-t border-line">
               <div class="inline-flex items-center gap-1 bg-soft rounded-lg border border-line p-0.5">
                 <button type="button" onclick="updateShoppingQty(${item.id}, -1)" class="w-8 h-8 rounded-md font-bold text-ink hover:bg-surface">−</button>
@@ -2064,6 +2948,8 @@
         items,
         historyItems,
         shoppingList,
+        savedLists,
+        productPool,
         savedMarkets
       };
       const stamp = new Date().toISOString().slice(0, 10);
@@ -2117,19 +3003,31 @@
           const data = JSON.parse(text);
           openConfirmModal(
             'Importar backup?',
-            'Isso substitui comparação, histórico, lista e mercados atuais pelos dados do arquivo.',
+            'Isso substitui comparação, histórico, lista, listas guardadas e mercados atuais pelos dados do arquivo.',
             () => {
               if (data.items) items = normalizeItemsState(data.items);
               if (Array.isArray(data.historyItems)) historyItems = data.historyItems;
-              if (Array.isArray(data.shoppingList)) shoppingList = data.shoppingList;
+              if (Array.isArray(data.shoppingList)) {
+                shoppingList = data.shoppingList.map(normalizeShoppingEntry).filter(Boolean);
+              }
+              if (Array.isArray(data.savedLists)) {
+                savedLists = data.savedLists.map(normalizeSavedList).filter(Boolean);
+              }
+              if (Array.isArray(data.productPool)) {
+                productPool = normalizeProductPool(data.productPool);
+              }
               if (Array.isArray(data.savedMarkets)) {
                 savedMarkets = data.savedMarkets.filter(m => typeof m === 'string');
               }
+              seedProductPoolFromKnownSources(false);
               saveToStorage();
               renderMarketSuggestions();
               renderList();
               renderHistory();
               renderShoppingList();
+              renderShoppingPickChips();
+              renderProductPool();
+              renderSavedLists();
               showToast('✅ Backup importado com sucesso.');
             },
             'Sim, importar'
@@ -2221,10 +3119,14 @@
       setInterval(updateHeaderClock, 30000);
       loadFromStorage();
       renderQuickMeasureButtons();
+      renderShoppingPickChips();
+      renderProductPool();
+      renderSavedLists();
       renderList();
       syncThemeControls();
       syncMarketActionButton();
       persistTheme();
+      openOnboarding(false);
 
       const marketInput = document.getElementById('marketName');
       if (marketInput) {
