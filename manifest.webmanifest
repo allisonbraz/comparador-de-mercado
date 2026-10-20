@@ -1,0 +1,20 @@
+{
+  "name": "Comparador de Mercado",
+  "short_name": "Comparador",
+  "description": "Compare preço por quilo, litro, rolo e unidade no mercado.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f1f5f9",
+  "theme_color": "#059669",
+  "lang": "pt-BR",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

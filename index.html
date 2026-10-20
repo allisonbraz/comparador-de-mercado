@@ -1,0 +1,2248 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-palette="assai" data-scheme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#E8592A" id="metaThemeColor">
+  <meta name="description" content="Compare preço por quilo, litro, rolo e unidade no mercado — rápido na prateleira.">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Comparador">
+  <title>Comparador de Mercado</title>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/icon.svg">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            canvas: 'var(--canvas)',
+            surface: 'var(--surface)',
+            soft: 'var(--soft)',
+            ink: 'var(--ink)',
+            muted: 'var(--muted)',
+            faint: 'var(--faint)',
+            line: 'var(--line)',
+            scrim: 'var(--scrim)',
+            brand: {
+              DEFAULT: 'var(--brand)',
+              soft: 'var(--brand-soft)',
+              mid: 'var(--brand-mid)',
+              deep: 'var(--brand-deep)',
+              fg: 'var(--brand-fg)'
+            },
+            info: { DEFAULT: 'var(--info)', soft: 'var(--info-soft)' },
+            market: { DEFAULT: 'var(--market)', soft: 'var(--market-soft)' },
+            danger: { DEFAULT: 'var(--danger)', soft: 'var(--danger-soft)' }
+          },
+          boxShadow: {
+            lift: 'var(--shadow-lift)',
+            panel: 'var(--shadow-panel)'
+          }
+        }
+      }
+    };
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* Cores inspiradas nas redes — só a paleta, sem logo/símbolo */
+    :root, [data-palette="assai"] {
+      --brand: #E8592A; --brand-deep: #C0431A; --brand-mid: #F09A78; --brand-soft: #FDECE6; --brand-fg: #FFF8F5;
+      --canvas: #F7F1EE; --surface: #FFFFFF; --soft: #EDE4DF; --ink: #2A1610; --muted: #6B4538; --faint: #8F6A5C; --line: #DCCFC8;
+      --scrim: rgba(42, 22, 16, 0.55); --info: #034991; --info-soft: #E5EEF8; --market: #C9A000; --market-soft: #FFF6D1;
+      --danger: #B42318; --danger-soft: #FCEBEA;
+      --shadow-lift: 0 1px 2px rgba(42, 22, 16, 0.06), 0 8px 24px rgba(42, 22, 16, 0.07);
+      --shadow-panel: 0 12px 40px rgba(42, 22, 16, 0.18); --meta-theme: #E8592A;
+    }
+    [data-palette="atacadao"] {
+      --brand: #F5C400; --brand-deep: #D4A800; --brand-mid: #F7D96A; --brand-soft: #FFF8D9; --brand-fg: #1A1A1A;
+      --canvas: #F5F3EA; --surface: #FFFFFF; --soft: #EBE6D6; --ink: #1A1A1A; --muted: #4A4636; --faint: #7A7460; --line: #D6D0BB;
+      --scrim: rgba(26, 26, 26, 0.55); --info: #00387B; --info-soft: #E5EEF6; --market: #9A6700; --market-soft: #FFF3D6;
+      --danger: #B42318; --danger-soft: #FCEBEA;
+      --shadow-lift: 0 1px 2px rgba(26, 26, 26, 0.06), 0 8px 24px rgba(26, 26, 26, 0.07);
+      --shadow-panel: 0 12px 40px rgba(26, 26, 26, 0.18); --meta-theme: #F5C400;
+    }
+    [data-palette="carrefour"] {
+      --brand: #00387B; --brand-deep: #00285A; --brand-mid: #5A86B5; --brand-soft: #E6EEF6; --brand-fg: #F5F8FC;
+      --canvas: #EEF1F5; --surface: #FFFFFF; --soft: #E0E5EC; --ink: #101820; --muted: #3A4A5C; --faint: #6A7A8C; --line: #C5CED8;
+      --scrim: rgba(16, 24, 32, 0.55); --info: #007AC3; --info-soft: #E5F3FA; --market: #F67828; --market-soft: #FFF0E6;
+      --danger: #BB1E10; --danger-soft: #FCEBEA;
+      --shadow-lift: 0 1px 2px rgba(16, 24, 32, 0.06), 0 8px 24px rgba(16, 24, 32, 0.06);
+      --shadow-panel: 0 12px 40px rgba(16, 24, 32, 0.18); --meta-theme: #00387B;
+    }
+    [data-palette="paodeacucar"] {
+      --brand: #0B7A3E; --brand-deep: #085C2E; --brand-mid: #6BB88A; --brand-soft: #E6F5EC; --brand-fg: #F4FBF7;
+      --canvas: #EEF3F0; --surface: #FFFFFF; --soft: #E4ECE7; --ink: #14241A; --muted: #3F5A4B; --faint: #6B8576; --line: #C9D8CF;
+      --scrim: rgba(20, 36, 26, 0.55); --info: #1D5F8A; --info-soft: #E5F2FA; --market: #C9A000; --market-soft: #FFF6D1;
+      --danger: #B42318; --danger-soft: #FCEBEA;
+      --shadow-lift: 0 1px 2px rgba(20, 36, 26, 0.06), 0 8px 24px rgba(20, 36, 26, 0.06);
+      --shadow-panel: 0 12px 40px rgba(20, 36, 26, 0.18); --meta-theme: #0B7A3E;
+    }
+    [data-palette="extra"] {
+      --brand: #EB1D29; --brand-deep: #B8141E; --brand-mid: #F07A82; --brand-soft: #FDE8E9; --brand-fg: #FFF7F7;
+      --canvas: #F6F0F0; --surface: #FFFFFF; --soft: #EDE3E3; --ink: #241414; --muted: #644242; --faint: #8A6565; --line: #D8C8C8;
+      --scrim: rgba(36, 20, 20, 0.55); --info: #007AC3; --info-soft: #E5F3FA; --market: #EF7706; --market-soft: #FFF0E0;
+      --danger: #7E0409; --danger-soft: #FCEBEA;
+      --shadow-lift: 0 1px 2px rgba(36, 20, 20, 0.06), 0 8px 24px rgba(36, 20, 20, 0.07);
+      --shadow-panel: 0 12px 40px rgba(36, 20, 20, 0.18); --meta-theme: #EB1D29;
+    }
+    [data-scheme="dark"] {
+      --canvas: #121416; --surface: #1A1E22; --soft: #262B31; --ink: #E8EDF2; --muted: #A8B4C0; --faint: #7E8A96; --line: #323840;
+      --scrim: rgba(0, 0, 0, 0.62);
+      --brand-soft: color-mix(in srgb, var(--brand) 22%, #1A1E22);
+      --info-soft: color-mix(in srgb, var(--info) 22%, #1A1E22);
+      --market-soft: color-mix(in srgb, var(--market) 24%, #1A1E22);
+      --danger-soft: color-mix(in srgb, var(--danger) 22%, #1A1E22);
+      --shadow-lift: 0 1px 2px rgba(0,0,0,.35), 0 10px 28px rgba(0,0,0,.28);
+      --shadow-panel: 0 16px 48px rgba(0,0,0,.45);
+    }
+    [data-scheme="dark"][data-palette="assai"] { --canvas:#171210; --surface:#221A16; --soft:#2E241F; --line:#3D312B; }
+    [data-scheme="dark"][data-palette="atacadao"] { --canvas:#14140F; --surface:#1E1E16; --soft:#2A2A1E; --line:#3A3A2A; --brand-fg:#1A1A1A; }
+    [data-scheme="dark"][data-palette="carrefour"] { --canvas:#0F1218; --surface:#161B24; --soft:#222833; --line:#323A48; }
+    [data-scheme="dark"][data-palette="paodeacucar"] { --canvas:#101816; --surface:#18241F; --soft:#22302A; --line:#2E4038; }
+    [data-scheme="dark"][data-palette="extra"] { --canvas:#171111; --surface:#221818; --soft:#2E2121; --line:#403030; }
+
+    html { color-scheme: light; }
+    html[data-scheme="dark"] { color-scheme: dark; }
+
+    body {
+      font-family: 'Source Sans 3', system-ui, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      padding-bottom: env(safe-area-inset-bottom, 0);
+      transition: background-color 220ms cubic-bezier(0.16,1,0.3,1), color 220ms cubic-bezier(0.16,1,0.3,1);
+    }
+    ::selection { background: color-mix(in srgb, var(--brand) 28%, transparent); color: var(--ink); }
+    :focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .tab-btn {
+      transition: background-color 180ms cubic-bezier(0.16,1,0.3,1), border-color 180ms cubic-bezier(0.16,1,0.3,1),
+                  color 180ms cubic-bezier(0.16,1,0.3,1), transform 180ms cubic-bezier(0.16,1,0.3,1);
+    }
+    .tab-btn:active { transform: scale(0.97); }
+    .theme-panel {
+      display: none;
+      transform-origin: top right;
+    }
+    .theme-panel.is-open {
+      display: block;
+      animation: themeIn 180ms cubic-bezier(0.16,1,0.3,1) both;
+    }
+    @keyframes themeIn {
+      from { opacity: 0; transform: translateY(-6px) scale(0.98); }
+      to { opacity: 1; transform: none; }
+    }
+    .palette-swatch {
+      width: 2rem; height: 2rem; border-radius: 999px; border: 2px solid transparent;
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,.08);
+      transition: transform 160ms cubic-bezier(0.16,1,0.3,1), border-color 160ms ease;
+    }
+    .palette-swatch[aria-pressed="true"] { border-color: var(--ink); transform: scale(1.08); }
+    .sr-only {
+      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden;
+      clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+    }
+  </style>
+  <script>
+    (function () {
+      try {
+        var legacy = { economia: 'paodeacucar', oferta: 'assai', comparar: 'carrefour', feira: 'extra' };
+        var raw = localStorage.getItem('comparador_theme_v1');
+        if (!raw) return;
+        var t = JSON.parse(raw);
+        var palette = t.palette;
+        if (legacy[palette]) palette = legacy[palette];
+        if (palette) document.documentElement.setAttribute('data-palette', palette);
+        if (t.scheme) document.documentElement.setAttribute('data-scheme', t.scheme);
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body class="bg-canvas text-ink min-h-screen pb-24">
+
+  <!-- Cabeçalho Fixo -->
+  <header class="bg-brand text-brand-fg sticky top-0 z-30 shadow-lift">
+    <div class="max-w-lg mx-auto px-4 py-3 flex items-center justify-between gap-2">
+      <div class="flex items-center gap-2 min-w-0">
+        <span class="text-2xl shrink-0" aria-hidden="true">🛒</span>
+        <div class="min-w-0">
+          <h1 class="text-base font-extrabold leading-tight tracking-tight truncate">Comparador de Mercado</h1>
+          <p class="text-[11px] text-brand-fg/90 font-medium truncate">Economize comparando o preço real</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-1.5 shrink-0">
+        <div id="headerClock" class="hidden sm:block text-right text-[11px] bg-brand-deep/70 px-2.5 py-1 rounded-lg font-medium text-brand-fg"></div>
+        <div class="relative">
+          <button type="button" id="themeToggleBtn" onclick="toggleThemePanel()" class="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-brand-deep/50 hover:bg-brand-deep text-brand-fg transition" aria-expanded="false" aria-controls="themePanel" title="Aparência">
+            <span id="themeToggleIcon" aria-hidden="true">🎨</span>
+            <span class="sr-only">Aparência</span>
+          </button>
+          <div id="themePanel" class="theme-panel absolute right-0 top-full mt-2 w-64 rounded-2xl bg-surface text-ink border border-line shadow-panel p-3 z-40" hidden>
+            <p class="text-xs font-extrabold text-ink mb-2">Aparência</p>
+            <div class="flex items-center justify-between gap-2 mb-3 p-2 rounded-xl bg-soft">
+              <span class="text-[11px] font-bold text-muted">Modo</span>
+              <div class="inline-flex rounded-lg bg-surface border border-line p-0.5">
+                <button type="button" id="schemeLightBtn" onclick="setColorScheme('light')" class="px-2.5 py-1 rounded-md text-[11px] font-bold">Claro</button>
+                <button type="button" id="schemeDarkBtn" onclick="setColorScheme('dark')" class="px-2.5 py-1 rounded-md text-[11px] font-bold">Noturno</button>
+              </div>
+            </div>
+            <p class="text-[11px] font-bold text-muted mb-1.5">Cores (só a paleta)</p>
+            <div class="grid grid-cols-5 gap-1.5" id="paletteSwatches">
+              <button type="button" class="palette-swatch" data-palette="atacadao" style="background:#F5C400" title="Atacadão" aria-label="Paleta Atacadão" onclick="setPalette('atacadao')"></button>
+              <button type="button" class="palette-swatch" data-palette="assai" style="background:#E8592A" title="Assaí" aria-label="Paleta Assaí" onclick="setPalette('assai')"></button>
+              <button type="button" class="palette-swatch" data-palette="carrefour" style="background:#00387B" title="Carrefour" aria-label="Paleta Carrefour" onclick="setPalette('carrefour')"></button>
+              <button type="button" class="palette-swatch" data-palette="paodeacucar" style="background:#0B7A3E" title="Pão de Açúcar" aria-label="Paleta Pão de Açúcar" onclick="setPalette('paodeacucar')"></button>
+              <button type="button" class="palette-swatch" data-palette="extra" style="background:#EB1D29" title="Extra" aria-label="Paleta Extra" onclick="setPalette('extra')"></button>
+            </div>
+            <p id="paletteLabel" class="text-[11px] text-muted mt-2 leading-snug">Assaí — laranja</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  <!-- Container Principal -->
+  <main class="max-w-lg mx-auto px-3 pt-3">
+
+    <!-- Abas de Navegação -->
+    <nav class="grid grid-cols-5 gap-1 mb-3 bg-surface p-1.5 rounded-2xl shadow-lift border border-line">
+      <button onclick="setCategory('weight')" id="tab-weight" class="tab-btn flex flex-col items-center justify-center py-2 px-0.5 rounded-xl text-[11px] font-bold transition-all bg-brand-soft text-brand-deep border-2 border-brand">
+        <span class="text-base mb-0.5">⚖️</span>
+        <span>Peso</span>
+      </button>
+
+      <button onclick="setCategory('volume')" id="tab-volume" class="tab-btn flex flex-col items-center justify-center py-2 px-0.5 rounded-xl text-[11px] font-bold transition-all text-muted border-2 border-transparent hover:bg-soft">
+        <span class="text-base mb-0.5">🧴</span>
+        <span>Volume</span>
+      </button>
+
+      <button onclick="setCategory('unit')" id="tab-unit" class="tab-btn flex flex-col items-center justify-center py-2 px-0.5 rounded-xl text-[11px] font-bold transition-all text-muted border-2 border-transparent hover:bg-soft">
+        <span class="text-base mb-0.5">🧻</span>
+        <span>Unid.</span>
+      </button>
+
+      <button onclick="setCategory('list')" id="tab-list" class="tab-btn relative flex flex-col items-center justify-center py-2 px-0.5 rounded-xl text-[11px] font-bold transition-all text-muted border-2 border-transparent hover:bg-soft">
+        <span class="text-base mb-0.5">🛒</span>
+        <span>Lista</span>
+        <span id="listCountBadge" class="hidden absolute -top-1 -right-0.5 bg-brand text-brand-fg text-[9px] font-extrabold px-1.5 py-0.2 rounded-full shadow">0</span>
+      </button>
+
+      <button onclick="setCategory('history')" id="tab-history" class="tab-btn relative flex flex-col items-center justify-center py-2 px-0.5 rounded-xl text-[11px] font-bold transition-all text-muted border-2 border-transparent hover:bg-soft">
+        <span class="text-base mb-0.5">💾</span>
+        <span>Salvos</span>
+        <span id="historyCountBadge" class="hidden absolute -top-1 -right-0.5 bg-market text-brand-fg text-[9px] font-extrabold px-1.5 py-0.2 rounded-full shadow">0</span>
+      </button>
+    </nav>
+
+    <!-- SEÇÃO DE COMPARAÇÃO (Aba Peso, Volume e Unidades) -->
+    <section id="compareSection">
+      
+      <!-- Card de Formulário -->
+      <div class="bg-surface rounded-2xl p-4 shadow-lift border border-line mb-4">
+        
+        <!-- Campo: Nome do Mercado (Mantém preenchido para facilitar no corredor) -->
+        <div class="mb-3">
+          <div class="flex items-center justify-between mb-1">
+            <label for="marketName" class="text-xs font-bold text-ink flex items-center gap-1">
+              <span>🏪</span> Nome do Mercado / Atacadista
+            </label>
+            <span class="text-[10px] text-brand font-semibold">Fica fixo para agilizar</span>
+          </div>
+          <div class="relative">
+            <input 
+              type="text" 
+              id="marketName" 
+              list="marketSuggestions"
+              placeholder="Ex: Americanas, Assaí, mercado da esquina..." 
+              enterkeyhint="done"
+              autocomplete="off"
+              class="w-full px-3 py-2.5 pr-20 rounded-xl border border-line text-sm font-medium focus:outline-none focus:border-brand focus:ring-2 focus:ring-brand/20 bg-soft focus:bg-surface transition"
+            >
+            <button 
+              type="button" 
+              onclick="clearMarketInput()" 
+              title="Trocar de mercado"
+              class="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs text-faint hover:text-muted px-1.5 py-0.5 rounded bg-soft font-semibold"
+            >
+              Trocar
+            </button>
+          </div>
+          <datalist id="marketSuggestions"></datalist>
+
+          <div class="flex items-center justify-between gap-2 mt-2">
+            <p class="text-[11px] font-bold text-muted">Seus mercados</p>
+            <div class="flex items-center gap-1.5">
+              <button
+                type="button"
+                id="marketAddBtn"
+                onclick="addOrRenameMarketFromInput()"
+                class="text-[11px] font-bold px-2.5 py-1 rounded-lg bg-brand-soft text-brand-deep border border-brand-mid"
+              >
+                + Salvar
+              </button>
+              <button
+                type="button"
+                id="marketEditToggle"
+                onclick="toggleMarketEditMode()"
+                class="text-[11px] font-bold px-2.5 py-1 rounded-lg bg-canvas text-muted border border-line"
+                aria-pressed="false"
+              >
+                Editar
+              </button>
+            </div>
+          </div>
+          <p id="marketEditHint" class="hidden text-[10px] text-muted mt-1 leading-snug">
+            Toque ✎ para renomear ou × para apagar. Pode remover qualquer sugestão padrão.
+          </p>
+
+          <!-- Chips Rápidos de Mercados -->
+          <div id="marketChipsContainer" class="flex items-center gap-1.5 overflow-x-auto no-scrollbar mt-2 pt-0.5">
+            <!-- Preenchido via JS -->
+          </div>
+        </div>
+
+        <!-- Campo: Nome do Produto / Marca -->
+        <div class="mb-3">
+          <label for="prodName" class="block text-xs font-bold text-ink mb-1">
+            🏷️ Produto / Marca <span class="font-normal text-faint">(opcional)</span>
+          </label>
+          <input 
+            type="text" 
+            id="prodName" 
+            placeholder="Ex: Leite em pó Ninho 800g" 
+            class="w-full px-3 py-2.5 rounded-xl border border-line text-sm focus:outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
+          >
+        </div>
+
+        <!-- Campos para PESO e VOLUME -->
+        <div id="standardFields" class="grid grid-cols-5 gap-2.5 mb-3">
+          <div class="col-span-3">
+            <label for="prodQty" id="qtyLabel" class="block text-xs font-bold text-ink mb-1">Peso da Embalagem</label>
+            <input 
+              type="text" 
+              id="prodQty" 
+              inputmode="decimal" 
+              enterkeyhint="next"
+              autocomplete="off"
+              placeholder="Ex: 800" 
+              class="w-full px-3 py-2.5 rounded-xl border border-line text-base font-semibold focus:outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
+            >
+          </div>
+          <div class="col-span-2">
+            <label for="prodUnit" class="block text-xs font-bold text-ink mb-1">Unidade</label>
+            <select 
+              id="prodUnit" 
+              class="w-full px-2.5 py-2.5 rounded-xl border border-line text-sm font-bold bg-soft focus:outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
+            >
+              <option value="g">Gramas (g)</option>
+              <option value="kg">Quilos (kg)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Botões de Preenchimento Rápido de Medidas Comuns -->
+        <div id="quickMeasures" class="flex items-center gap-1.5 flex-wrap mb-3">
+          <!-- Gerado dinamicamente conforme a aba (ex: 400g, 500g, 800g, 1kg) -->
+        </div>
+
+        <!-- Campos para UNIDADES / PAPEL HIGIÊNICO -->
+        <div id="unitFields" class="hidden grid-cols-2 gap-2.5 mb-3">
+          <div>
+            <label for="packUnits" class="block text-xs font-bold text-ink mb-1">Qtd. no Pacote</label>
+            <input 
+              type="text" 
+              id="packUnits" 
+              inputmode="decimal" 
+              enterkeyhint="next"
+              autocomplete="off"
+              placeholder="Ex: 12 (rolos/un)" 
+              class="w-full px-3 py-2.5 rounded-xl border border-line text-base font-semibold focus:outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
+            >
+          </div>
+          <div>
+            <label for="measurePerUnit" class="block text-xs font-bold text-ink mb-1">Metros por Un. <span class="font-normal text-faint">(opc.)</span></label>
+            <input 
+              type="text" 
+              id="measurePerUnit" 
+              inputmode="decimal" 
+              enterkeyhint="next"
+              autocomplete="off"
+              placeholder="Ex: 30 (metros)" 
+              class="w-full px-3 py-2.5 rounded-xl border border-line text-base font-semibold focus:outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
+            >
+          </div>
+        </div>
+
+        <!-- Campo: Preço na Prateleira -->
+        <div class="mb-3">
+          <label for="prodPrice" class="block text-xs font-bold text-ink mb-1">💰 Preço na Prateleira (R$)</label>
+          <div class="relative">
+            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-faint font-bold text-sm">R$</span>
+            <input 
+              type="text" 
+              id="prodPrice" 
+              inputmode="decimal" 
+              enterkeyhint="done"
+              autocomplete="off"
+              placeholder="0,00" 
+              class="w-full pl-9 pr-3 py-2.5 rounded-xl border border-line text-lg font-extrabold text-ink focus:outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
+            >
+          </div>
+        </div>
+
+        <!-- Promoção: Leve X Pague Y ou Atacado -->
+        <div class="mb-3">
+          <label class="flex items-center gap-2.5 p-2.5 rounded-xl bg-info-soft/80 border border-info cursor-pointer select-none">
+            <input type="checkbox" id="promoCheck" onchange="togglePromo()" class="w-4 h-4 accent-brand rounded cursor-pointer">
+            <span class="text-xs font-bold text-info">🏷️ Tem promoção ou preço de atacado?</span>
+          </label>
+
+          <div id="promoBox" class="hidden mt-2 p-3 rounded-xl bg-info-soft border border-info">
+            <div class="grid grid-cols-2 gap-2 mb-2.5">
+              <label class="flex items-center gap-1.5 p-2 rounded-lg bg-surface border border-info cursor-pointer">
+                <input type="radio" name="promoMode" value="leve" checked onchange="updatePromoModeUI()" class="accent-brand">
+                <span class="text-[11px] font-bold text-info">Leve X Pague Y</span>
+              </label>
+              <label class="flex items-center gap-1.5 p-2 rounded-lg bg-surface border border-info cursor-pointer">
+                <input type="radio" name="promoMode" value="atacado" onchange="updatePromoModeUI()" class="accent-brand">
+                <span class="text-[11px] font-bold text-info">Atacado (a partir de X)</span>
+              </label>
+            </div>
+
+            <div id="promoLeveFields" class="grid grid-cols-2 gap-2.5">
+              <div>
+                <label for="promoTake" class="block text-[11px] font-bold text-info mb-1">Leve (qtd.)</label>
+                <input type="text" id="promoTake" inputmode="numeric" autocomplete="off" placeholder="Ex: 3" class="w-full px-2.5 py-2 rounded-lg border border-info text-sm font-bold bg-surface">
+              </div>
+              <div>
+                <label for="promoPay" class="block text-[11px] font-bold text-info mb-1">Pague (qtd.)</label>
+                <input type="text" id="promoPay" inputmode="numeric" autocomplete="off" placeholder="Ex: 2" class="w-full px-2.5 py-2 rounded-lg border border-info text-sm font-bold bg-surface">
+              </div>
+            </div>
+
+            <div id="promoAtacadoFields" class="hidden grid-cols-2 gap-2.5">
+              <div>
+                <label for="atacadoMinQty" class="block text-[11px] font-bold text-info mb-1">A partir de (un.)</label>
+                <input type="text" id="atacadoMinQty" inputmode="numeric" autocomplete="off" placeholder="Ex: 3" class="w-full px-2.5 py-2 rounded-lg border border-info text-sm font-bold bg-surface">
+              </div>
+              <div>
+                <label for="atacadoPrice" class="block text-[11px] font-bold text-info mb-1">Preço atacado (R$)</label>
+                <input type="text" id="atacadoPrice" inputmode="decimal" autocomplete="off" placeholder="Ex: 8,99" class="w-full px-2.5 py-2 rounded-lg border border-info text-sm font-bold bg-surface">
+              </div>
+            </div>
+
+            <p id="promoHelpText" class="text-[11px] text-info mt-2 leading-snug">
+              💡 Calcula o valor real por unidade na promoção Leve X Pague Y.
+            </p>
+          </div>
+        </div>
+
+        <!-- Botões de Ação Principal -->
+        <div class="grid grid-cols-1 gap-2">
+          <button 
+            type="button" 
+            onclick="addProduct(false)" 
+            class="w-full py-3.5 px-4 bg-brand hover:bg-brand-deep active:scale-[0.99] text-brand-fg font-extrabold rounded-xl shadow-sm transition flex items-center justify-center gap-2 text-sm"
+          >
+            <span>➕ Adicionar para Comparar Agora</span>
+          </button>
+          <button 
+            type="button" 
+            onclick="addProduct(true)" 
+            class="w-full py-2.5 px-3 bg-brand-soft hover:bg-brand-soft text-brand-deep font-bold rounded-xl border border-brand-mid transition flex items-center justify-center gap-1.5 text-xs"
+          >
+            <span>💾 Adicionar na Comparação e Já Salvar no Histórico</span>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Cabeçalho do Ranking -->
+      <div class="flex items-center justify-between px-1 mb-2.5">
+        <div>
+          <h2 class="text-sm font-extrabold text-ink">Ranking de Custo-Benefício</h2>
+          <p class="text-[11px] text-muted">Ordenado automaticamente do mais barato ao mais caro</p>
+        </div>
+        <div class="flex items-center gap-1">
+          <button 
+            type="button" 
+            onclick="shareComparison()" 
+            class="text-xs font-bold text-brand-deep hover:text-brand-deep px-2.5 py-1 rounded-lg hover:bg-brand-soft transition"
+          >
+            Compartilhar
+          </button>
+          <button 
+            type="button" 
+            onclick="requestClearComparison()" 
+            class="text-xs font-bold text-danger hover:text-danger px-2.5 py-1 rounded-lg hover:bg-danger-soft transition"
+          >
+            Limpar
+          </button>
+        </div>
+      </div>
+
+      <!-- Lista de Produtos Comparados -->
+      <div id="resultsList" class="space-y-2.5"></div>
+
+    </section>
+
+    <!-- SEÇÃO DE HISTÓRICO DE PREÇOS SALVOS -->
+    <section id="historySection" class="hidden">
+      
+      <!-- Barra de Busca e Filtros do Histórico -->
+      <div class="bg-surface rounded-2xl p-3.5 shadow-sm border border-line mb-3">
+        <div class="flex items-center justify-between mb-2 gap-2">
+          <h2 class="text-sm font-extrabold text-ink flex items-center gap-1.5">
+            <span>💾</span> Histórico de Preços
+          </h2>
+          <button 
+            type="button" 
+            onclick="requestClearHistory()" 
+            class="text-xs font-bold text-danger hover:text-danger px-2 py-1 rounded-lg hover:bg-danger-soft shrink-0"
+          >
+            Apagar
+          </button>
+        </div>
+
+        <div class="flex items-center gap-1.5 flex-wrap mb-2.5">
+          <button type="button" onclick="exportBackupJson()" class="text-[11px] font-bold px-2.5 py-1.5 rounded-lg bg-canvas text-ink border border-line">Backup JSON</button>
+          <button type="button" onclick="exportHistoryCsv()" class="text-[11px] font-bold px-2.5 py-1.5 rounded-lg bg-canvas text-ink border border-line">Exportar CSV</button>
+          <button type="button" onclick="document.getElementById('importFileInput').click()" class="text-[11px] font-bold px-2.5 py-1.5 rounded-lg bg-brand-soft text-brand-deep border border-brand-mid">Importar</button>
+          <input type="file" id="importFileInput" accept=".json,.csv,application/json,text/csv" class="hidden" onchange="importBackupFile(event)">
+        </div>
+
+        <div class="relative mb-2.5">
+          <span class="absolute left-3 top-1/2 -translate-y-1/2 text-faint text-sm">🔍</span>
+          <input 
+            type="text" 
+            id="historySearch" 
+            oninput="renderHistory()" 
+            placeholder="Buscar produto, marca ou mercado..." 
+            class="w-full pl-9 pr-8 py-2 rounded-xl border border-line text-xs font-medium focus:outline-none focus:border-brand"
+          >
+          <button 
+            type="button" 
+            onclick="clearHistorySearch()" 
+            class="absolute right-2.5 top-1/2 -translate-y-1/2 text-faint hover:text-muted text-xs font-bold"
+          >
+            ✕
+          </button>
+        </div>
+
+        <!-- Filtro Rápido por Categoria no Histórico -->
+        <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar" id="historyFilterChips">
+          <button onclick="setHistoryFilter('all')" id="hfilter-all" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-ink text-brand-fg shrink-0">Todos</button>
+          <button onclick="setHistoryFilter('weight')" id="hfilter-weight" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-canvas text-muted shrink-0">⚖️ Peso (g/kg)</button>
+          <button onclick="setHistoryFilter('volume')" id="hfilter-volume" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-canvas text-muted shrink-0">🧴 Volume (ml/L)</button>
+          <button onclick="setHistoryFilter('unit')" id="hfilter-unit" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-canvas text-muted shrink-0">🧻 Unidades/Rolos</button>
+        </div>
+      </div>
+
+      <!-- Lista de Itens do Histórico -->
+      <div id="historyList" class="space-y-2.5"></div>
+
+    </section>
+
+    <!-- SEÇÃO LISTA DE COMPRAS -->
+    <section id="listSection" class="hidden">
+      <div class="bg-surface rounded-2xl p-3.5 shadow-sm border border-line mb-3">
+        <div class="flex items-center justify-between mb-1">
+          <h2 class="text-sm font-extrabold text-ink">🛒 Lista de Compras</h2>
+          <button type="button" onclick="requestClearShoppingList()" class="text-xs font-bold text-danger px-2 py-1 rounded-lg hover:bg-danger-soft">Limpar</button>
+        </div>
+        <p class="text-[11px] text-muted mb-3">Adicione itens da comparação ou do histórico. O total usa o preço efetivo salvo.</p>
+        <div class="rounded-xl bg-brand-soft border border-brand-mid px-3 py-2.5 flex items-center justify-between">
+          <span class="text-xs font-bold text-brand-deep">Total estimado</span>
+          <span id="shoppingTotal" class="text-lg font-black text-brand-deep">R$ 0,00</span>
+        </div>
+      </div>
+      <div id="shoppingList" class="space-y-2.5"></div>
+    </section>
+
+  </main>
+
+  <!-- Modal: Evolução de preço -->
+  <div id="evolutionModal" class="fixed inset-0 z-50 hidden bg-scrim flex items-end sm:items-center justify-center p-3" onclick="onEvolutionBackdrop(event)">
+    <div class="bg-surface rounded-2xl w-full max-w-md max-h-[85vh] overflow-hidden shadow-xl border border-line flex flex-col" role="dialog" aria-modal="true">
+      <div class="px-4 py-3 border-b border-line flex items-center justify-between gap-2">
+        <div class="min-w-0">
+          <h3 id="evolutionTitle" class="text-sm font-extrabold text-ink truncate">Evolução de preço</h3>
+          <p id="evolutionSubtitle" class="text-[11px] text-muted truncate"></p>
+        </div>
+        <button type="button" onclick="closeEvolutionModal()" class="text-xs font-bold text-muted px-2 py-1 rounded-lg hover:bg-canvas">Fechar</button>
+      </div>
+      <div id="evolutionBody" class="p-3 overflow-y-auto space-y-2"></div>
+    </div>
+  </div>
+
+  <!-- Toast de Notificação (Substitui alert()) -->
+  <div id="toastBanner" class="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 hidden max-w-sm w-[92%] bg-ink text-brand-fg px-4 py-3 rounded-xl shadow-xl border border-line flex items-center justify-between gap-3 transition-all">
+    <span id="toastMessage" class="text-xs font-semibold leading-snug"></span>
+    <button onclick="hideToast()" class="text-faint hover:text-brand-fg text-xs font-bold px-1">OK</button>
+  </div>
+
+  <!-- Banner para instalar PWA -->
+  <div id="installBanner" class="fixed bottom-4 left-1/2 -translate-x-1/2 z-40 hidden max-w-sm w-[92%] bg-brand-deep text-brand-fg px-4 py-3 rounded-xl shadow-xl flex items-center justify-between gap-3">
+    <span class="text-xs font-semibold leading-snug">Instale no celular para abrir offline no mercado.</span>
+    <div class="flex items-center gap-2 shrink-0">
+      <button type="button" onclick="dismissInstallBanner()" class="text-[11px] font-bold text-brand-fg/90">Agora não</button>
+      <button type="button" id="installBtn" onclick="promptInstall()" class="text-[11px] font-extrabold bg-surface text-brand-deep px-2.5 py-1.5 rounded-lg">Instalar</button>
+    </div>
+  </div>
+
+  <!-- Modal de Confirmação Customizado (Substitui confirm()) -->
+  <div id="confirmModal" class="fixed inset-0 z-50 hidden bg-scrim backdrop-blur-xs flex items-center justify-center p-4" onclick="onConfirmBackdrop(event)">
+    <div class="bg-surface rounded-2xl max-w-xs w-full p-5 shadow-xl border border-line text-center" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+      <div class="text-3xl mb-2">⚠️</div>
+      <h3 id="confirmTitle" class="text-base font-extrabold text-ink mb-1">Confirmar ação</h3>
+      <p id="confirmDesc" class="text-xs text-muted mb-4 leading-relaxed"></p>
+      <div class="grid grid-cols-2 gap-2">
+        <button type="button" onclick="closeConfirmModal()" class="py-2.5 px-3 rounded-xl font-bold text-xs bg-canvas text-ink hover:bg-soft">
+          Cancelar
+        </button>
+        <button type="button" id="confirmActionBtn" class="py-2.5 px-3 rounded-xl font-bold text-xs bg-danger text-brand-fg hover:bg-danger">
+          Sim, apagar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Chaves de armazenamento local
+    const STORAGE_KEY_ITEMS = 'comparador_mercado_pro_items_v3';
+    const STORAGE_KEY_HISTORY = 'comparador_mercado_pro_history_v3';
+    const STORAGE_KEY_MARKETS = 'comparador_mercado_pro_markets_v3';
+    const STORAGE_KEY_LAST_MARKET = 'comparador_mercado_pro_last_market_v3';
+    const STORAGE_KEY_SHOPPING = 'comparador_mercado_pro_shopping_v3';
+
+    let currentCategory = 'weight';
+    let currentHistoryFilter = 'all';
+
+    // Estado dos itens em comparação e salvos
+    let items = {
+      weight: [],
+      volume: [],
+      unit: []
+    };
+    let historyItems = [];
+    let shoppingList = [];
+    const DEFAULT_MARKETS = ['Americanas', 'Atacadão', 'Assaí', 'Carrefour', 'Extra'];
+    let savedMarkets = [...DEFAULT_MARKETS];
+    let marketEditMode = false;
+    let renamingMarket = null;
+
+    // Atalhos rápidos de medidas para agilizar a digitação na prateleira
+    const QUICK_PRESETS = {
+      weight: [
+        { label: '200g', qty: 200, unit: 'g' },
+        { label: '400g', qty: 400, unit: 'g' },
+        { label: '500g', qty: 500, unit: 'g' },
+        { label: '800g', qty: 800, unit: 'g' },
+        { label: '1 kg', qty: 1, unit: 'kg' },
+        { label: '2 kg', qty: 2, unit: 'kg' },
+        { label: '5 kg', qty: 5, unit: 'kg' }
+      ],
+      volume: [
+        { label: '200ml', qty: 200, unit: 'ml' },
+        { label: '320ml', qty: 320, unit: 'ml' },
+        { label: '480ml', qty: 480, unit: 'ml' },
+        { label: '500ml', qty: 500, unit: 'ml' },
+        { label: '900ml', qty: 900, unit: 'ml' },
+        { label: '1 L', qty: 1, unit: 'l' },
+        { label: '2 L', qty: 2, unit: 'l' },
+        { label: '5 L', qty: 5, unit: 'l' }
+      ],
+      unit: [
+        { label: '4 un / 30m', units: 4, meters: 30 },
+        { label: '8 un / 30m', units: 8, meters: 30 },
+        { label: '12 un / 30m', units: 12, meters: 30 },
+        { label: '16 un / 30m', units: 16, meters: 30 },
+        { label: '12 un / 60m', units: 12, meters: 60 },
+        { label: '6 un (s/ metro)', units: 6, meters: '' },
+        { label: '12 un (s/ metro)', units: 12, meters: '' },
+        { label: '30 ovos', units: 30, meters: '' }
+      ]
+    };
+
+    // Formata Data e Hora exatas: "DD/MM/AAAA às HH:MM"
+    function getFormattedDateTime() {
+      const now = new Date();
+      const day = String(now.getDate()).padStart(2, '0');
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const year = now.getFullYear();
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      return `${day}/${month}/${year} às ${hours}:${minutes}`;
+    }
+
+    // Atualiza o relógio do topo
+    function updateHeaderClock() {
+      const el = document.getElementById('headerClock');
+      if (el) {
+        el.innerHTML = `📅 ${getFormattedDateTime()}`;
+      }
+    }
+
+    // Sistema de Notificação (Toast)
+    let toastTimer = null;
+    function showToast(message) {
+      const banner = document.getElementById('toastBanner');
+      const msgEl = document.getElementById('toastMessage');
+      msgEl.textContent = message;
+      banner.classList.remove('hidden');
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        banner.classList.add('hidden');
+      }, 3600);
+    }
+
+    function hideToast() {
+      document.getElementById('toastBanner').classList.add('hidden');
+    }
+
+    // Aceita "12,90", "12.90", "1.299,90" e milhar BR "1.299"
+    function parseBRNumber(value) {
+      if (value === null || value === undefined) return NaN;
+      let s = String(value).trim().replace(/\s/g, '').replace(/R\$\s?/i, '');
+      if (!s) return NaN;
+
+      if (s.includes(',') && s.includes('.')) {
+        s = s.replace(/\./g, '').replace(',', '.');
+      } else if (s.includes(',')) {
+        s = s.replace(',', '.');
+      } else if (/^\d{1,3}(\.\d{3})+$/.test(s)) {
+        // Ex: 1.299 ou 12.500 → milhar BR (sem centavos)
+        s = s.replace(/\./g, '');
+      }
+      return parseFloat(s);
+    }
+
+    // Sistema de Modal de Confirmação
+    let pendingConfirmFn = null;
+    function openConfirmModal(title, desc, onConfirm, confirmLabel = 'Sim, apagar') {
+      document.getElementById('confirmTitle').textContent = title;
+      document.getElementById('confirmDesc').textContent = desc;
+      document.getElementById('confirmActionBtn').textContent = confirmLabel;
+      pendingConfirmFn = onConfirm;
+      document.getElementById('confirmModal').classList.remove('hidden');
+    }
+
+    function closeConfirmModal() {
+      document.getElementById('confirmModal').classList.add('hidden');
+      pendingConfirmFn = null;
+    }
+
+    function onConfirmBackdrop(event) {
+      if (event.target === document.getElementById('confirmModal')) {
+        closeConfirmModal();
+      }
+    }
+
+    document.getElementById('confirmActionBtn').addEventListener('click', () => {
+      if (typeof pendingConfirmFn === 'function') {
+        pendingConfirmFn();
+      }
+      closeConfirmModal();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeConfirmModal();
+        closeEvolutionModal();
+        closeThemePanel();
+      }
+    });
+
+    // ——— Aparência: paleta + modo noturno ———
+    const THEME_KEY = 'comparador_theme_v1';
+    const PALETTE_COPY = {
+      atacadao: 'Atacadão — amarelo',
+      assai: 'Assaí — laranja',
+      carrefour: 'Carrefour — azul',
+      paodeacucar: 'Pão de Açúcar — verde',
+      extra: 'Extra — vermelho'
+    };
+
+    // Chaves sem acento — mercados desconhecidos (ex.: Americanas) não mudam a paleta
+    const MARKET_TO_PALETTE = {
+      atacadao: 'atacadao',
+      assai: 'assai',
+      carrefour: 'carrefour',
+      'pao de acucar': 'paodeacucar',
+      extra: 'extra'
+    };
+
+    function normalizeMarketKey(name) {
+      return String(name || '')
+        .trim()
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '');
+    }
+
+    function getThemeState() {
+      return {
+        palette: document.documentElement.getAttribute('data-palette') || 'assai',
+        scheme: document.documentElement.getAttribute('data-scheme') || 'light'
+      };
+    }
+
+    function suggestPaletteForMarket(marketName) {
+      const palette = MARKET_TO_PALETTE[normalizeMarketKey(marketName)];
+      if (palette) setPalette(palette);
+    }
+
+    function persistTheme() {
+      try {
+        localStorage.setItem(THEME_KEY, JSON.stringify(getThemeState()));
+      } catch (e) {}
+      const meta = document.getElementById('metaThemeColor');
+      if (meta) {
+        const brand = getComputedStyle(document.documentElement).getPropertyValue('--meta-theme').trim()
+          || getComputedStyle(document.documentElement).getPropertyValue('--brand').trim();
+        meta.setAttribute('content', brand || '#0F7A4A');
+      }
+      syncThemeControls();
+    }
+
+    function syncThemeControls() {
+      const { palette, scheme } = getThemeState();
+      const label = document.getElementById('paletteLabel');
+      if (label) label.textContent = PALETTE_COPY[palette] || palette;
+
+      document.querySelectorAll('.palette-swatch').forEach((btn) => {
+        btn.setAttribute('aria-pressed', btn.dataset.palette === palette ? 'true' : 'false');
+      });
+
+      const lightBtn = document.getElementById('schemeLightBtn');
+      const darkBtn = document.getElementById('schemeDarkBtn');
+      if (lightBtn && darkBtn) {
+        const on = 'bg-brand text-brand-fg';
+        const off = 'text-muted hover:bg-soft';
+        lightBtn.className = `px-2.5 py-1 rounded-md text-[11px] font-bold ${scheme === 'light' ? on : off}`;
+        darkBtn.className = `px-2.5 py-1 rounded-md text-[11px] font-bold ${scheme === 'dark' ? on : off}`;
+      }
+
+      const icon = document.getElementById('themeToggleIcon');
+      if (icon) icon.textContent = scheme === 'dark' ? '🌙' : '🎨';
+    }
+
+    function setPalette(palette) {
+      document.documentElement.setAttribute('data-palette', palette);
+      persistTheme();
+    }
+
+    function setColorScheme(scheme) {
+      document.documentElement.setAttribute('data-scheme', scheme);
+      persistTheme();
+    }
+
+    function toggleThemePanel() {
+      const panel = document.getElementById('themePanel');
+      const btn = document.getElementById('themeToggleBtn');
+      const open = !panel.classList.contains('is-open');
+      if (open) {
+        panel.classList.add('is-open');
+        panel.removeAttribute('hidden');
+        btn.setAttribute('aria-expanded', 'true');
+        syncThemeControls();
+      } else {
+        closeThemePanel();
+      }
+    }
+
+    function closeThemePanel() {
+      const panel = document.getElementById('themePanel');
+      const btn = document.getElementById('themeToggleBtn');
+      if (!panel || !btn) return;
+      panel.classList.remove('is-open');
+      panel.setAttribute('hidden', '');
+      btn.setAttribute('aria-expanded', 'false');
+    }
+
+    document.addEventListener('click', (e) => {
+      const panel = document.getElementById('themePanel');
+      const btn = document.getElementById('themeToggleBtn');
+      if (!panel || !panel.classList.contains('is-open')) return;
+      if (panel.contains(e.target) || btn.contains(e.target)) return;
+      closeThemePanel();
+    });
+
+    function normalizeItemsState(parsed) {
+      const base = { weight: [], volume: [], unit: [] };
+      if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return base;
+      ['weight', 'volume', 'unit'].forEach((key) => {
+        base[key] = Array.isArray(parsed[key]) ? parsed[key] : [];
+      });
+      return base;
+    }
+
+    // Carregar dados do localStorage
+    function loadFromStorage() {
+      try {
+        const rawItems = localStorage.getItem(STORAGE_KEY_ITEMS);
+        const rawHistory = localStorage.getItem(STORAGE_KEY_HISTORY);
+        const rawMarkets = localStorage.getItem(STORAGE_KEY_MARKETS);
+        const rawShopping = localStorage.getItem(STORAGE_KEY_SHOPPING);
+        const lastMarket = localStorage.getItem(STORAGE_KEY_LAST_MARKET);
+
+        if (rawItems) items = normalizeItemsState(JSON.parse(rawItems));
+        if (rawHistory) {
+          const parsedHistory = JSON.parse(rawHistory);
+          historyItems = Array.isArray(parsedHistory) ? parsedHistory : [];
+        }
+        if (rawShopping) {
+          const parsedShopping = JSON.parse(rawShopping);
+          shoppingList = Array.isArray(parsedShopping) ? parsedShopping : [];
+        }
+        if (rawMarkets !== null) {
+          const parsedMarkets = JSON.parse(rawMarkets);
+          savedMarkets = Array.isArray(parsedMarkets)
+            ? parsedMarkets.filter((m) => typeof m === 'string' && m.trim())
+            : [...DEFAULT_MARKETS];
+        }
+        if (lastMarket && typeof lastMarket === 'string') {
+          document.getElementById('marketName').value = lastMarket;
+        }
+      } catch (e) {
+        console.error('Erro ao ler localStorage:', e);
+        items = { weight: [], volume: [], unit: [] };
+        historyItems = [];
+        shoppingList = [];
+      }
+      updateHistoryBadge();
+      updateListBadge();
+      renderMarketSuggestions();
+    }
+
+    // Salvar dados no localStorage
+    function saveToStorage() {
+      try {
+        localStorage.setItem(STORAGE_KEY_ITEMS, JSON.stringify(items));
+        localStorage.setItem(STORAGE_KEY_HISTORY, JSON.stringify(historyItems));
+        localStorage.setItem(STORAGE_KEY_SHOPPING, JSON.stringify(shoppingList));
+        localStorage.setItem(STORAGE_KEY_MARKETS, JSON.stringify(savedMarkets));
+        const currentMarketVal = document.getElementById('marketName').value.trim();
+        localStorage.setItem(STORAGE_KEY_LAST_MARKET, currentMarketVal);
+      } catch (e) {
+        console.error('Erro ao gravar localStorage:', e);
+        if (e && (e.name === 'QuotaExceededError' || e.code === 22)) {
+          showToast('⚠️ Armazenamento cheio. Apague itens do Histórico para continuar salvando.');
+        }
+      }
+      updateHistoryBadge();
+      updateListBadge();
+    }
+
+    function updateHistoryBadge() {
+      const badge = document.getElementById('historyCountBadge');
+      if (historyItems.length > 0) {
+        badge.textContent = historyItems.length;
+        badge.classList.remove('hidden');
+      } else {
+        badge.classList.add('hidden');
+      }
+    }
+
+    function updateListBadge() {
+      const badge = document.getElementById('listCountBadge');
+      if (!badge) return;
+      if (shoppingList.length > 0) {
+        badge.textContent = shoppingList.length;
+        badge.classList.remove('hidden');
+      } else {
+        badge.classList.add('hidden');
+      }
+    }
+
+    function productKey(item) {
+      return [
+        item.category || '',
+        (item.name || '').trim().toLowerCase().replace(/\s+/g, ' '),
+        (item.measureSummary || '').trim().toLowerCase()
+      ].join('|');
+    }
+
+    function parseAppDate(str) {
+      if (!str) return 0;
+      const m = String(str).match(/(\d{2})\/(\d{2})\/(\d{4})(?:\s+às\s+(\d{2}):(\d{2}))?/);
+      if (!m) return 0;
+      return new Date(+m[3], +m[2] - 1, +m[1], +(m[4] || 0), +(m[5] || 0)).getTime();
+    }
+
+    // Gerenciar lista de mercados sugeridos e chips clicáveis
+    function registerMarketName(marketName) {
+      const clean = marketName.trim();
+      if (!clean || clean === 'Mercado não informado') return;
+      const existsIndex = savedMarkets.findIndex(m => m.toLowerCase() === clean.toLowerCase());
+      if (existsIndex !== -1) {
+        savedMarkets.splice(existsIndex, 1);
+      }
+      savedMarkets.unshift(clean);
+      if (savedMarkets.length > 16) savedMarkets = savedMarkets.slice(0, 16);
+      renderMarketSuggestions();
+      saveToStorage();
+    }
+
+    function toggleMarketEditMode() {
+      marketEditMode = !marketEditMode;
+      if (!marketEditMode) {
+        renamingMarket = null;
+        syncMarketActionButton();
+      }
+      const toggle = document.getElementById('marketEditToggle');
+      const hint = document.getElementById('marketEditHint');
+      if (toggle) {
+        toggle.setAttribute('aria-pressed', marketEditMode ? 'true' : 'false');
+        toggle.textContent = marketEditMode ? 'Concluir' : 'Editar';
+        toggle.className = marketEditMode
+          ? 'text-[11px] font-bold px-2.5 py-1 rounded-lg bg-brand text-brand-fg border border-brand'
+          : 'text-[11px] font-bold px-2.5 py-1 rounded-lg bg-canvas text-muted border border-line';
+      }
+      if (hint) hint.classList.toggle('hidden', !marketEditMode);
+      renderMarketSuggestions();
+    }
+
+    function syncMarketActionButton() {
+      const btn = document.getElementById('marketAddBtn');
+      if (!btn) return;
+      if (renamingMarket) {
+        btn.textContent = '✓ Renomear';
+        btn.className = 'text-[11px] font-bold px-2.5 py-1 rounded-lg bg-brand text-brand-fg border border-brand';
+      } else {
+        btn.textContent = '+ Salvar';
+        btn.className = 'text-[11px] font-bold px-2.5 py-1 rounded-lg bg-brand-soft text-brand-deep border border-brand-mid';
+      }
+    }
+
+    function addOrRenameMarketFromInput() {
+      const input = document.getElementById('marketName');
+      const clean = (input.value || '').trim();
+      if (!clean) {
+        showToast('Digite o nome do mercado (ex.: Americanas).');
+        input.focus();
+        return;
+      }
+
+      if (renamingMarket) {
+        const idx = savedMarkets.findIndex(m => m.toLowerCase() === renamingMarket.toLowerCase());
+        if (idx === -1) {
+          renamingMarket = null;
+          syncMarketActionButton();
+          registerMarketName(clean);
+          showToast(`Mercado salvo: ${clean}`);
+          return;
+        }
+        const duplicate = savedMarkets.some((m, i) => i !== idx && m.toLowerCase() === clean.toLowerCase());
+        if (duplicate) {
+          showToast('Já existe um mercado com esse nome.');
+          return;
+        }
+        const oldName = savedMarkets[idx];
+        savedMarkets[idx] = clean;
+        renamingMarket = null;
+        syncMarketActionButton();
+        input.value = clean;
+        localStorage.setItem(STORAGE_KEY_LAST_MARKET, clean);
+        saveToStorage();
+        renderMarketSuggestions();
+        suggestPaletteForMarket(clean);
+        showToast(`Renomeado: ${oldName} → ${clean}`);
+        return;
+      }
+
+      registerMarketName(clean);
+      localStorage.setItem(STORAGE_KEY_LAST_MARKET, clean);
+      suggestPaletteForMarket(clean);
+      showToast(`Mercado salvo: ${clean}`);
+    }
+
+    function startRenameMarket(name) {
+      renamingMarket = name;
+      const input = document.getElementById('marketName');
+      input.value = name;
+      input.focus();
+      input.select();
+      if (!marketEditMode) toggleMarketEditMode();
+      syncMarketActionButton();
+      showToast('Edite o nome e toque em Renomear.');
+    }
+
+    function deleteMarket(name) {
+      openConfirmModal(
+        'Apagar este mercado?',
+        `"${name}" sai dos atalhos. Seus preços salvos no Histórico continuam intactos.`,
+        () => {
+          savedMarkets = savedMarkets.filter(m => m.toLowerCase() !== name.toLowerCase());
+          if (renamingMarket && renamingMarket.toLowerCase() === name.toLowerCase()) {
+            renamingMarket = null;
+            syncMarketActionButton();
+          }
+          const input = document.getElementById('marketName');
+          if (input.value.trim().toLowerCase() === name.toLowerCase()) {
+            input.value = '';
+            localStorage.setItem(STORAGE_KEY_LAST_MARKET, '');
+          }
+          saveToStorage();
+          renderMarketSuggestions();
+          showToast(`Removido: ${name}`);
+        },
+        'Sim, apagar'
+      );
+    }
+
+    function renderMarketSuggestions() {
+      const datalist = document.getElementById('marketSuggestions');
+      const chipsContainer = document.getElementById('marketChipsContainer');
+
+      datalist.innerHTML = savedMarkets.map(m => `<option value="${escapeHtml(m)}">`).join('');
+      chipsContainer.innerHTML = '';
+
+      if (savedMarkets.length === 0) {
+        const empty = document.createElement('p');
+        empty.className = 'text-[11px] text-muted';
+        empty.textContent = 'Nenhum atalho. Digite o nome e toque em + Salvar.';
+        chipsContainer.appendChild(empty);
+        return;
+      }
+
+      savedMarkets.forEach((m) => {
+        const wrap = document.createElement('div');
+        wrap.className = 'shrink-0 inline-flex items-center gap-0.5 rounded-full border border-line bg-canvas overflow-hidden';
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'text-[11px] font-semibold pl-2.5 pr-2 py-1 text-muted hover:bg-brand-soft hover:text-brand-deep transition';
+        btn.textContent = '🏪 ' + m;
+        btn.addEventListener('click', () => selectMarketChip(m));
+        wrap.appendChild(btn);
+
+        if (marketEditMode) {
+          const renameBtn = document.createElement('button');
+          renameBtn.type = 'button';
+          renameBtn.className = 'text-[11px] font-bold px-1.5 py-1 text-brand-deep hover:bg-brand-soft';
+          renameBtn.setAttribute('aria-label', 'Renomear ' + m);
+          renameBtn.textContent = '✎';
+          renameBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            startRenameMarket(m);
+          });
+
+          const delBtn = document.createElement('button');
+          delBtn.type = 'button';
+          delBtn.className = 'text-[11px] font-bold px-1.5 py-1 text-danger hover:bg-danger-soft';
+          delBtn.setAttribute('aria-label', 'Apagar ' + m);
+          delBtn.textContent = '×';
+          delBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            deleteMarket(m);
+          });
+
+          wrap.appendChild(renameBtn);
+          wrap.appendChild(delBtn);
+        }
+
+        chipsContainer.appendChild(wrap);
+      });
+    }
+
+    function selectMarketChip(name) {
+      const input = document.getElementById('marketName');
+      input.value = name;
+      localStorage.setItem(STORAGE_KEY_LAST_MARKET, name);
+      suggestPaletteForMarket(name);
+    }
+
+    function clearMarketInput() {
+      const input = document.getElementById('marketName');
+      input.value = '';
+      renamingMarket = null;
+      syncMarketActionButton();
+      input.focus();
+    }
+
+    // Renderiza os botões de atalho de medidas (400g, 800g, 1kg, 320ml, 12 rolos, etc.)
+    function renderQuickMeasureButtons() {
+      const container = document.getElementById('quickMeasures');
+      const presets = QUICK_PRESETS[currentCategory] || [];
+
+      if (presets.length === 0) {
+        container.innerHTML = '';
+        return;
+      }
+
+      container.innerHTML = `
+        <span class="text-[11px] font-bold text-faint mr-1">Atalhos:</span>
+        ${presets.map((p, idx) => `
+          <button 
+            type="button" 
+            onclick="applyPreset(${idx})"
+            class="text-[11px] font-bold px-2.5 py-1 rounded-lg bg-canvas hover:bg-brand-soft text-ink hover:text-brand-deep border border-line transition"
+          >
+            ${p.label}
+          </button>
+        `).join('')}
+      `;
+    }
+
+    function applyPreset(index) {
+      const preset = QUICK_PRESETS[currentCategory][index];
+      if (!preset) return;
+
+      if (currentCategory === 'weight' || currentCategory === 'volume') {
+        document.getElementById('prodQty').value = preset.qty;
+        document.getElementById('prodUnit').value = preset.unit;
+      } else if (currentCategory === 'unit') {
+        document.getElementById('packUnits').value = preset.units;
+        document.getElementById('measurePerUnit').value = preset.meters;
+      }
+      document.getElementById('prodPrice').focus();
+    }
+
+    function getSelectedPromoMode() {
+      const checked = document.querySelector('input[name="promoMode"]:checked');
+      return checked ? checked.value : 'leve';
+    }
+
+    function updatePromoModeUI() {
+      const mode = getSelectedPromoMode();
+      const leve = document.getElementById('promoLeveFields');
+      const atacado = document.getElementById('promoAtacadoFields');
+      const help = document.getElementById('promoHelpText');
+
+      if (mode === 'atacado') {
+        leve.classList.add('hidden');
+        leve.classList.remove('grid');
+        atacado.classList.remove('hidden');
+        atacado.classList.add('grid');
+        help.textContent = '💡 Usa o preço de atacado (a partir de X unidades) no ranking de custo-benefício.';
+      } else {
+        atacado.classList.add('hidden');
+        atacado.classList.remove('grid');
+        leve.classList.remove('hidden');
+        leve.classList.add('grid');
+        help.textContent = '💡 Calcula o valor real por unidade na promoção Leve X Pague Y.';
+      }
+    }
+
+    function togglePromo() {
+      const checked = document.getElementById('promoCheck').checked;
+      const box = document.getElementById('promoBox');
+      if (checked) {
+        box.classList.remove('hidden');
+        updatePromoModeUI();
+      } else {
+        box.classList.add('hidden');
+      }
+    }
+
+    function resetPromoFields() {
+      document.getElementById('promoCheck').checked = false;
+      document.getElementById('promoTake').value = '';
+      document.getElementById('promoPay').value = '';
+      document.getElementById('atacadoMinQty').value = '';
+      document.getElementById('atacadoPrice').value = '';
+      const leveRadio = document.querySelector('input[name="promoMode"][value="leve"]');
+      if (leveRadio) leveRadio.checked = true;
+      togglePromo();
+    }
+
+    // Troca de Aba
+    function setCategory(cat) {
+      currentCategory = cat;
+
+      // Atualiza visual das abas
+      const allTabs = ['weight', 'volume', 'unit', 'list', 'history'];
+      allTabs.forEach(t => {
+        const btn = document.getElementById('tab-' + t);
+        if (!btn) return;
+        if (t === cat) {
+          btn.className = 'tab-btn relative flex flex-col items-center justify-center py-2 px-0.5 rounded-xl text-[11px] font-bold transition-all bg-brand-soft text-brand-deep border-2 border-brand';
+        } else {
+          btn.className = 'tab-btn relative flex flex-col items-center justify-center py-2 px-0.5 rounded-xl text-[11px] font-bold transition-all text-muted border-2 border-transparent hover:bg-soft';
+        }
+      });
+
+      const compareSection = document.getElementById('compareSection');
+      const historySection = document.getElementById('historySection');
+      const listSection = document.getElementById('listSection');
+
+      compareSection.classList.add('hidden');
+      historySection.classList.add('hidden');
+      listSection.classList.add('hidden');
+
+      if (cat === 'history') {
+        historySection.classList.remove('hidden');
+        renderHistory();
+        return;
+      }
+
+      if (cat === 'list') {
+        listSection.classList.remove('hidden');
+        renderShoppingList();
+        return;
+      }
+
+      compareSection.classList.remove('hidden');
+
+      const standardFields = document.getElementById('standardFields');
+      const unitFields = document.getElementById('unitFields');
+      const unitSelect = document.getElementById('prodUnit');
+      const prodName = document.getElementById('prodName');
+      const qtyLabel = document.getElementById('qtyLabel');
+
+      if (cat === 'weight') {
+        standardFields.classList.remove('hidden');
+        standardFields.classList.add('grid');
+        unitFields.classList.add('hidden');
+        unitFields.classList.remove('grid');
+        qtyLabel.textContent = 'Peso da Embalagem';
+        prodName.placeholder = 'Ex: Leite em pó Ninho 800g';
+        unitSelect.innerHTML = `
+          <option value="g">Gramas (g)</option>
+          <option value="kg">Quilos (kg)</option>
+        `;
+      } else if (cat === 'volume') {
+        standardFields.classList.remove('hidden');
+        standardFields.classList.add('grid');
+        unitFields.classList.add('hidden');
+        unitFields.classList.remove('grid');
+        qtyLabel.textContent = 'Volume da Embalagem';
+        prodName.placeholder = 'Ex: Limpador Veja 480ml';
+        unitSelect.innerHTML = `
+          <option value="ml">Mililitros (ml)</option>
+          <option value="l">Litros (L)</option>
+        `;
+      } else if (cat === 'unit') {
+        standardFields.classList.add('hidden');
+        standardFields.classList.remove('grid');
+        unitFields.classList.remove('hidden');
+        unitFields.classList.add('grid');
+        prodName.placeholder = 'Ex: Papel Higiênico Neve 12 rolos';
+      }
+
+      renderQuickMeasureButtons();
+      renderList();
+    }
+
+    // Adicionar Produto na Comparação (e opcionalmente direto no Histórico)
+    function addProduct(alsoSaveToHistory = false) {
+      const marketInput = document.getElementById('marketName');
+      const nameInput = document.getElementById('prodName');
+      const priceInput = document.getElementById('prodPrice');
+
+      const marketName = marketInput.value.trim() || 'Mercado não informado';
+      const rawPrice = parseBRNumber(priceInput.value);
+
+      if (isNaN(rawPrice) || rawPrice <= 0) {
+        showToast('⚠️ Informe o preço na prateleira (R$) para calcular.');
+        priceInput.focus();
+        return;
+      }
+
+      // Promoção: Leve X Pague Y ou Atacado
+      const promoActive = document.getElementById('promoCheck').checked;
+      let effectivePrice = rawPrice;
+      let promoText = '';
+
+      if (promoActive) {
+        const mode = getSelectedPromoMode();
+        if (mode === 'atacado') {
+          const minQty = Math.round(parseBRNumber(document.getElementById('atacadoMinQty').value));
+          const atacadoPrice = parseBRNumber(document.getElementById('atacadoPrice').value);
+          if (isNaN(minQty) || minQty <= 0 || isNaN(atacadoPrice) || atacadoPrice <= 0) {
+            showToast('⚠️ No atacado, informe a quantidade mínima e o preço (Ex: a partir de 3 un por R$ 8,99).');
+            return;
+          }
+          if (atacadoPrice >= rawPrice) {
+            showToast('⚠️ O preço de atacado deve ser menor que o preço de prateleira.');
+            return;
+          }
+          effectivePrice = atacadoPrice;
+          const savings = ((rawPrice - atacadoPrice) / rawPrice) * 100;
+          promoText = `Atacado a partir de ${minQty} un • R$ ${formatCurrency(atacadoPrice)}/un (−${savings.toFixed(0)}% vs prateleira)`;
+        } else {
+          const take = Math.round(parseBRNumber(document.getElementById('promoTake').value));
+          const pay = Math.round(parseBRNumber(document.getElementById('promoPay').value));
+
+          if (isNaN(take) || isNaN(pay) || take <= 0 || pay <= 0 || pay >= take) {
+            showToast('⚠️ Na promoção Leve X Pague Y, preencha valores válidos (Ex: Leve 3, Pague 2).');
+            return;
+          }
+          effectivePrice = (rawPrice * pay) / take;
+          const totalPromo = rawPrice * pay;
+          promoText = `Leve ${take} Pague ${pay} • Sai a R$ ${formatCurrency(effectivePrice)}/un (Total R$ ${formatCurrency(totalPromo)})`;
+        }
+      }
+
+      const timestamp = getFormattedDateTime();
+
+      let item = {
+        id: Date.now() + Math.floor(Math.random() * 1000),
+        category: currentCategory,
+        market: marketName,
+        name: nameInput.value.trim() || getDefaultProductName(currentCategory, items[currentCategory].length + 1),
+        rawPrice: rawPrice,
+        effectivePrice: effectivePrice,
+        promoText: promoText,
+        dateTime: timestamp
+      };
+
+      if (currentCategory === 'weight' || currentCategory === 'volume') {
+        const qtyInput = document.getElementById('prodQty');
+        const qty = parseBRNumber(qtyInput.value);
+        const unit = document.getElementById('prodUnit').value;
+
+        if (isNaN(qty) || qty <= 0) {
+          showToast('⚠️ Digite a quantidade da embalagem (ex: 400, 800, 1...).');
+          qtyInput.focus();
+          return;
+        }
+
+        // Converte para Kg ou Litro como base
+        const baseAmount = (unit === 'g' || unit === 'ml') ? qty / 1000 : qty;
+        const mainMetricPrice = effectivePrice / baseAmount; // R$/kg ou R$/L
+        const subMetricPrice = mainMetricPrice / 10; // R$/100g ou R$/100ml
+
+        const unitDisplay = unit === 'l' ? 'L' : unit;
+        const baseUnitDisplay = currentCategory === 'weight' ? 'kg' : 'L';
+        const subUnitDisplay = currentCategory === 'weight' ? '100g' : '100ml';
+
+        item.measureSummary = `${qty}${unitDisplay}`;
+        item.desc = `Embalagem de ${qty}${unitDisplay} • Prateleira: R$ ${formatCurrency(rawPrice)}`;
+        item.scorePrice = mainMetricPrice;
+        item.mainLabel = `R$ ${formatCurrency(mainMetricPrice)} / ${baseUnitDisplay}`;
+        item.subLabel = `R$ ${formatCurrency(subMetricPrice)} a cada ${subUnitDisplay}`;
+
+        qtyInput.value = '';
+      } else if (currentCategory === 'unit') {
+        const packUnitsInput = document.getElementById('packUnits');
+        const measureInput = document.getElementById('measurePerUnit');
+
+        const units = parseBRNumber(packUnitsInput.value);
+        const measure = parseBRNumber(measureInput.value);
+
+        if (isNaN(units) || units <= 0) {
+          showToast('⚠️ Informe quantas unidades ou rolos vêm no pacote.');
+          packUnitsInput.focus();
+          return;
+        }
+
+        const pricePerUnit = effectivePrice / units;
+
+        if (!isNaN(measure) && measure > 0) {
+          const totalMeasure = units * measure;
+          const pricePerMeasure = effectivePrice / totalMeasure;
+          item.measureSummary = `${units} un x ${measure}m`;
+          item.desc = `Pacote ${units} un x ${measure}m (${totalMeasure}m total) • R$ ${formatCurrency(rawPrice)}`;
+          item.scorePrice = pricePerMeasure;
+          item.mainLabel = `R$ ${formatCurrency(pricePerMeasure, 3)} / metro`;
+          item.subLabel = `R$ ${formatCurrency(pricePerUnit)} por rolo/un.`;
+        } else {
+          item.measureSummary = `${units} un.`;
+          item.desc = `Pacote com ${units} unidades • R$ ${formatCurrency(rawPrice)}`;
+          item.scorePrice = pricePerUnit;
+          item.mainLabel = `R$ ${formatCurrency(pricePerUnit)} / un.`;
+          item.subLabel = `Pacote: R$ ${formatCurrency(effectivePrice)}`;
+        }
+
+        packUnitsInput.value = '';
+        measureInput.value = '';
+      }
+
+      // Registra o mercado nas sugestões e salva no estado
+      registerMarketName(marketName);
+      items[currentCategory].push(item);
+
+        if (alsoSaveToHistory) {
+        const historyEntry = {
+          ...item,
+          sourceId: item.id,
+          savedId: Date.now() + Math.floor(Math.random() * 1000),
+          savedAt: getFormattedDateTime()
+        };
+        historyItems.unshift(historyEntry);
+        showToast(`✅ Adicionado e salvo no Histórico (${marketName})!`);
+      } else {
+        showToast(`✅ Adicionado na comparação!`);
+      }
+
+      saveToStorage();
+
+      // Limpa apenas produto, preço e promoção (mantém o nome do mercado para o próximo item!)
+      nameInput.value = '';
+      priceInput.value = '';
+      resetPromoFields();
+
+      renderList();
+
+      // Próximo item: foca quantidade (fluxo rápido no corredor)
+      if (currentCategory === 'unit') {
+        document.getElementById('packUnits').focus();
+      } else {
+        document.getElementById('prodQty').focus();
+      }
+
+      if (navigator.vibrate) navigator.vibrate(12);
+    }
+
+    function shareComparison() {
+      const list = [...items[currentCategory]].sort((a, b) => a.scorePrice - b.scorePrice);
+      if (list.length === 0) {
+        showToast('Adicione produtos antes de compartilhar.');
+        return;
+      }
+
+      const catLabel = currentCategory === 'weight' ? 'Peso' : currentCategory === 'volume' ? 'Volume' : 'Unidades';
+      const lines = [
+        `🛒 Comparador de Mercado — ${catLabel}`,
+        `📅 ${getFormattedDateTime()}`,
+        ''
+      ];
+
+      list.forEach((item, index) => {
+        const rank = index === 0 ? '🏆' : `${index + 1}.`;
+        lines.push(`${rank} ${item.name} (${item.market})`);
+        lines.push(`   ${item.mainLabel} • ${item.measureSummary || ''}`);
+        if (item.promoText) lines.push(`   ${item.promoText}`);
+        lines.push('');
+      });
+
+      if (list.length > 1) {
+        const diff = ((list[1].scorePrice - list[0].scorePrice) / list[0].scorePrice) * 100;
+        lines.push(`💡 O 1º sai ~${diff.toFixed(0)}% mais barato que o 2º.`);
+      }
+
+      const text = lines.join('\n').trim();
+
+      if (navigator.share) {
+        navigator.share({ title: 'Comparador de Mercado', text }).catch((err) => {
+          if (err && err.name === 'AbortError') return;
+          copyShareText(text);
+        });
+      } else {
+        copyShareText(text);
+      }
+    }
+
+    function copyShareText(text) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+          showToast('📋 Ranking copiado! Cole no WhatsApp.');
+        }).catch(() => fallbackCopy(text));
+      } else {
+        fallbackCopy(text);
+      }
+    }
+
+    function fallbackCopy(text) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.setAttribute('readonly', '');
+      ta.style.position = 'fixed';
+      ta.style.left = '-9999px';
+      document.body.appendChild(ta);
+      ta.select();
+      try {
+        document.execCommand('copy');
+        showToast('📋 Ranking copiado! Cole no WhatsApp.');
+      } catch (e) {
+        showToast('Não foi possível copiar. Tente selecionar o texto manualmente.');
+      }
+      document.body.removeChild(ta);
+    }
+
+    function getDefaultProductName(cat, index) {
+      if (cat === 'weight') return `Produto Peso #${index}`;
+      if (cat === 'volume') return `Produto Líquido #${index}`;
+      return `Pacote/Unidade #${index}`;
+    }
+
+    function formatCurrency(val, decimals = 2) {
+      return Number(val).toLocaleString('pt-BR', {
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals
+      });
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    // Salvar um item da lista de comparação para o Histórico
+    function saveItemToHistory(id) {
+      const item = items[currentCategory].find(i => i.id === id);
+      if (!item) return;
+
+      const already = historyItems.some(h =>
+        h.sourceId === item.id ||
+        (h.name === item.name &&
+          h.market === item.market &&
+          h.scorePrice === item.scorePrice &&
+          h.rawPrice === item.rawPrice &&
+          h.measureSummary === item.measureSummary &&
+          h.dateTime === item.dateTime)
+      );
+
+      if (already) {
+        showToast('Esse item já está no Histórico.');
+        return;
+      }
+
+      const exactNow = getFormattedDateTime();
+      const historyEntry = {
+        ...item,
+        sourceId: item.id,
+        savedId: Date.now() + Math.floor(Math.random() * 1000),
+        savedAt: exactNow
+      };
+
+      historyItems.unshift(historyEntry);
+      saveToStorage();
+      showToast(`💾 Salvo no Histórico: ${item.name} (${item.market}) em ${exactNow}`);
+    }
+
+    // Enviar um item antigo do Histórico de volta para a disputa atual na prateleira
+    function sendHistoryToComparison(savedId) {
+      const hItem = historyItems.find(i => i.savedId === savedId);
+      if (!hItem) return;
+
+      const targetCategory = hItem.category || 'weight';
+      const clonedItem = {
+        ...hItem,
+        id: Date.now() + Math.floor(Math.random() * 1000),
+        fromHistory: true
+      };
+
+      items[targetCategory].push(clonedItem);
+      saveToStorage();
+      setCategory(targetCategory);
+      showToast(`🔄 "${hItem.name}" (${hItem.market}) entrou na comparação atual!`);
+    }
+
+    function removeProduct(id) {
+      items[currentCategory] = items[currentCategory].filter(i => i.id !== id);
+      saveToStorage();
+      renderList();
+    }
+
+    function requestClearComparison() {
+      if (items[currentCategory].length === 0) {
+        showToast('A lista desta categoria já está vazia.');
+        return;
+      }
+      openConfirmModal(
+        'Limpar comparação atual?',
+        'Isso removerá os itens desta aba de comparação (seus itens salvos no Histórico continuarão intactos).',
+        () => {
+          items[currentCategory] = [];
+          saveToStorage();
+          renderList();
+          showToast('Lista de comparação limpa.');
+        }
+      );
+    }
+
+    function removeHistoryItem(savedId) {
+      historyItems = historyItems.filter(i => i.savedId !== savedId);
+      saveToStorage();
+      renderHistory();
+      showToast('Registro removido do histórico.');
+    }
+
+    function requestClearHistory() {
+      if (historyItems.length === 0) {
+        showToast('O histórico já está vazio.');
+        return;
+      }
+      openConfirmModal(
+        'Apagar todo o Histórico?',
+        'Todos os preços e mercados salvos anteriormente serão excluídos permanentemente.',
+        () => {
+          historyItems = [];
+          saveToStorage();
+          renderHistory();
+          showToast('Histórico apagado.');
+        }
+      );
+    }
+
+    // Renderizar Lista de Comparação
+    function renderList() {
+      const container = document.getElementById('resultsList');
+      const list = [...items[currentCategory]].sort((a, b) => a.scorePrice - b.scorePrice);
+
+      if (list.length === 0) {
+        let exampleText = '';
+        if (currentCategory === 'weight') {
+          exampleText = 'Exemplo: Compare Leite em Pó de <b>400g</b>, <b>500g</b>, <b>800g</b> e <b>1kg</b> no mesmo mercado ou entre mercados diferentes.';
+        } else if (currentCategory === 'volume') {
+          exampleText = 'Exemplo: Compare produtos de limpeza de <b>200ml</b>, <b>320ml</b>, <b>480ml</b> e <b>2 Litros</b>.';
+        } else {
+          exampleText = 'Exemplo: Compare pacotes de Papel Higiênico de <b>4, 6, 8, 12 ou 16 rolos</b> informando a metragem.';
+        }
+
+        container.innerHTML = `
+          <div class="bg-surface rounded-2xl p-6 text-center border border-dashed border-line text-muted">
+            <div class="text-3xl mb-2">⚖️</div>
+            <p class="text-xs font-bold text-ink mb-1">Nenhum produto na disputa ainda</p>
+            <p class="text-[11px] leading-relaxed">${exampleText}</p>
+          </div>
+        `;
+        return;
+      }
+
+      const bestScore = list[0].scorePrice;
+
+      container.innerHTML = list.map((item, index) => {
+        const isBest = index === 0 && list.length > 1;
+        const diffPercent = bestScore > 0 ? ((item.scorePrice - bestScore) / bestScore) * 100 : 0;
+
+        let rankBadge = '';
+        let savingsNote = '';
+        if (isBest) {
+          rankBadge = `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-brand text-brand-fg shadow-xs">🏆 MAIS BARATO (1º)</span>`;
+          if (list.length > 1 && bestScore > 0) {
+            const vsSecond = ((list[1].scorePrice - bestScore) / bestScore) * 100;
+            savingsNote = `<p class="text-[11px] font-bold text-brand-deep mt-1">💡 ~${vsSecond.toFixed(0)}% mais barato que o 2º colocado</p>`;
+          }
+        } else if (list.length > 1) {
+          rankBadge = `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-danger-soft text-danger">+${diffPercent.toFixed(0)}% mais caro (${index + 1}º)</span>`;
+        } else {
+          rankBadge = `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-soft text-ink">Adicione outro para comparar</span>`;
+        }
+
+        const marketBadge = `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-market-soft text-market border border-market">🏪 ${escapeHtml(item.market)}</span>`;
+        const promoBadge = item.promoText ? `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-info-soft text-info">🏷️ Promo</span>` : '';
+        const historyTag = item.fromHistory ? `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-brand-soft text-brand-deep">🔄 Do Histórico</span>` : '';
+
+        return `
+          <div class="rounded-2xl p-3.5 transition shadow-xs border-2 ${isBest ? 'bg-brand-soft/90 border-brand' : 'bg-surface border-line'}">
+            
+            <!-- Linha Superior: Badges e Data/Hora -->
+            <div class="flex items-center justify-between gap-2 flex-wrap mb-1.5">
+              <div class="flex items-center gap-1.5 flex-wrap">
+                ${rankBadge}
+                ${marketBadge}
+                ${promoBadge}
+                ${historyTag}
+              </div>
+              <span class="text-[10px] font-semibold text-faint">🕒 ${escapeHtml(item.dateTime)}</span>
+            </div>
+
+            <!-- Conteúdo Principal do Card -->
+            <div class="flex items-center justify-between gap-2">
+              <div class="min-w-0 flex-1">
+                <h3 class="text-sm font-extrabold text-ink truncate">${escapeHtml(item.name)}</h3>
+                <p class="text-xs text-muted font-medium mt-0.5">${escapeHtml(item.desc)}</p>
+                ${item.promoText ? `<p class="text-[11px] text-info font-bold mt-1">${escapeHtml(item.promoText)}</p>` : ''}
+                ${savingsNote}
+              </div>
+
+              <!-- Preço Calculado por Medida -->
+              <div class="text-right shrink-0">
+                <div class="text-base font-black ${isBest ? 'text-brand-deep' : 'text-ink'}">${escapeHtml(item.mainLabel)}</div>
+                <div class="text-[11px] font-semibold text-muted">${escapeHtml(item.subLabel)}</div>
+              </div>
+            </div>
+
+            <!-- Barra Inferior de Ações do Card -->
+            <div class="flex items-center justify-end gap-1.5 flex-wrap mt-2.5 pt-2 border-t ${isBest ? 'border-brand-mid/80' : 'border-line'}">
+              <button type="button" onclick="addToShoppingListFromCompare(${item.id})" class="inline-flex items-center gap-1 px-2 py-1 rounded-lg text-[11px] font-bold bg-brand-soft hover:bg-brand-soft text-brand-deep border border-brand-mid transition">🛒 Lista</button>
+              <button type="button" onclick="saveItemToHistory(${item.id})" class="inline-flex items-center gap-1 px-2 py-1 rounded-lg text-[11px] font-bold bg-canvas hover:bg-brand-soft text-ink hover:text-brand-deep transition">💾 Salvar</button>
+              <button type="button" onclick="removeProduct(${item.id})" class="inline-flex items-center gap-1 px-2 py-1 rounded-lg text-[11px] font-bold bg-canvas hover:bg-danger-soft text-muted hover:text-danger transition">✕</button>
+            </div>
+
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Filtros do Histórico
+    function setHistoryFilter(filter) {
+      currentHistoryFilter = filter;
+      const filters = ['all', 'weight', 'volume', 'unit'];
+      filters.forEach(f => {
+        const btn = document.getElementById('hfilter-' + f);
+        if (f === filter) {
+          btn.className = 'px-2.5 py-1 rounded-lg text-xs font-bold bg-ink text-brand-fg shrink-0';
+        } else {
+          btn.className = 'px-2.5 py-1 rounded-lg text-xs font-semibold bg-canvas text-muted shrink-0';
+        }
+      });
+      renderHistory();
+    }
+
+    function clearHistorySearch() {
+      document.getElementById('historySearch').value = '';
+      renderHistory();
+    }
+
+    // Renderizar Aba de Histórico Salvo
+    function renderHistory() {
+      const container = document.getElementById('historyList');
+      const query = (document.getElementById('historySearch').value || '').trim().toLowerCase();
+
+      const filtered = historyItems.filter(item => {
+        const matchesCat = currentHistoryFilter === 'all' || item.category === currentHistoryFilter;
+        const matchesQuery = !query || 
+          (item.name && item.name.toLowerCase().includes(query)) ||
+          (item.market && item.market.toLowerCase().includes(query)) ||
+          (item.desc && item.desc.toLowerCase().includes(query));
+        return matchesCat && matchesQuery;
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="bg-surface rounded-2xl p-6 text-center border border-dashed border-line text-muted">
+            <div class="text-3xl mb-2">📂</div>
+            <p class="text-xs font-bold text-ink mb-1">Nenhum preço salvo encontrado</p>
+            <p class="text-[11px] leading-relaxed">
+              Quando estiver comparando produtos na prateleira, toque em <b>"💾 Salvar no Histórico"</b> para guardar o preço, o nome do mercado, o dia e a hora exatos.
+            </p>
+          </div>
+        `;
+        return;
+      }
+
+      const categoryIcons = {
+        weight: '⚖️ Peso',
+        volume: '🧴 Volume',
+        unit: '🧻 Unidades'
+      };
+
+      container.innerHTML = filtered.map(item => {
+        const catBadge = categoryIcons[item.category] || '📦 Item';
+        const displayDate = item.savedAt || item.dateTime || '';
+
+        return `
+          <div class="bg-surface rounded-2xl p-3.5 shadow-xs border border-line">
+            
+            <!-- Topo: Mercado, Categoria e Dia/Hora exatos -->
+            <div class="flex items-center justify-between gap-2 flex-wrap mb-1.5">
+              <div class="flex items-center gap-1.5 flex-wrap">
+                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-market-soft text-market border border-market">
+                  🏪 ${escapeHtml(item.market)}
+                </span>
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-canvas text-muted">
+                  ${catBadge}
+                </span>
+              </div>
+              <span class="text-[10px] font-bold text-brand-deep bg-brand-soft px-2 py-0.5 rounded-md border border-brand-mid">
+                📅 ${escapeHtml(displayDate)}
+              </span>
+            </div>
+
+            <!-- Dados do Produto e Preço -->
+            <div class="flex items-center justify-between gap-2 mt-1">
+              <div class="min-w-0 flex-1">
+                <h3 class="text-sm font-extrabold text-ink truncate">${escapeHtml(item.name)}</h3>
+                <p class="text-xs text-muted font-medium mt-0.5">${escapeHtml(item.desc)}</p>
+                ${item.promoText ? `<p class="text-[11px] text-info font-bold mt-0.5">${escapeHtml(item.promoText)}</p>` : ''}
+              </div>
+
+              <div class="text-right shrink-0">
+                <div class="text-base font-black text-ink">${escapeHtml(item.mainLabel)}</div>
+                <div class="text-[11px] font-semibold text-muted">${escapeHtml(item.subLabel)}</div>
+              </div>
+            </div>
+
+            <!-- Botões do Histórico -->
+            <div class="flex items-center justify-end gap-1.5 flex-wrap mt-2.5 pt-2 border-t border-line">
+              <button type="button" onclick="showPriceEvolution(${item.savedId})" class="inline-flex items-center gap-1 px-2 py-1.5 rounded-lg text-[11px] font-bold bg-brand-soft hover:bg-brand-soft text-brand-deep border border-brand-mid transition">📈 Evolução</button>
+              <button type="button" onclick="addToShoppingListFromHistory(${item.savedId})" class="inline-flex items-center gap-1 px-2 py-1.5 rounded-lg text-[11px] font-bold bg-brand-soft hover:bg-brand-soft text-brand-deep border border-brand-mid transition">🛒 Lista</button>
+              <button type="button" onclick="sendHistoryToComparison(${item.savedId})" class="inline-flex items-center gap-1 px-2 py-1.5 rounded-lg text-[11px] font-bold bg-brand-soft hover:bg-brand-soft text-brand-deep border border-brand-mid transition">🔄 Comparar</button>
+              <button type="button" onclick="removeHistoryItem(${item.savedId})" class="inline-flex items-center gap-1 px-2 py-1.5 rounded-lg text-[11px] font-bold bg-canvas hover:bg-danger-soft text-muted hover:text-danger transition">🗑️</button>
+            </div>
+
+          </div>
+        `;
+      }).join('');
+    }
+
+    // ——— Lista de compras ———
+    function pushShoppingItem(source) {
+      const entry = {
+        id: Date.now() + Math.floor(Math.random() * 1000),
+        name: source.name,
+        market: source.market,
+        category: source.category,
+        measureSummary: source.measureSummary || '',
+        effectivePrice: Number(source.effectivePrice) || 0,
+        rawPrice: Number(source.rawPrice) || 0,
+        mainLabel: source.mainLabel || '',
+        qty: 1,
+        addedAt: getFormattedDateTime()
+      };
+      shoppingList.unshift(entry);
+      saveToStorage();
+      showToast(`🛒 "${entry.name}" entrou na lista.`);
+    }
+
+    function addToShoppingListFromCompare(id) {
+      const item = items[currentCategory].find(i => i.id === id);
+      if (!item) return;
+      pushShoppingItem(item);
+    }
+
+    function addToShoppingListFromHistory(savedId) {
+      const item = historyItems.find(i => i.savedId === savedId);
+      if (!item) return;
+      pushShoppingItem(item);
+    }
+
+    function updateShoppingQty(id, delta) {
+      const item = shoppingList.find(i => i.id === id);
+      if (!item) return;
+      item.qty = Math.max(1, (item.qty || 1) + delta);
+      saveToStorage();
+      renderShoppingList();
+    }
+
+    function removeShoppingItem(id) {
+      shoppingList = shoppingList.filter(i => i.id !== id);
+      saveToStorage();
+      renderShoppingList();
+    }
+
+    function requestClearShoppingList() {
+      if (shoppingList.length === 0) {
+        showToast('A lista de compras já está vazia.');
+        return;
+      }
+      openConfirmModal(
+        'Limpar lista de compras?',
+        'Todos os itens da lista serão removidos.',
+        () => {
+          shoppingList = [];
+          saveToStorage();
+          renderShoppingList();
+          showToast('Lista de compras limpa.');
+        }
+      );
+    }
+
+    function renderShoppingList() {
+      const container = document.getElementById('shoppingList');
+      const totalEl = document.getElementById('shoppingTotal');
+      const total = shoppingList.reduce((sum, i) => sum + (Number(i.effectivePrice) || 0) * (Number(i.qty) || 1), 0);
+      totalEl.textContent = `R$ ${formatCurrency(total)}`;
+
+      if (shoppingList.length === 0) {
+        container.innerHTML = `
+          <div class="bg-surface rounded-2xl p-6 text-center border border-dashed border-line text-muted">
+            <div class="text-3xl mb-2">🛒</div>
+            <p class="text-xs font-bold text-ink mb-1">Lista vazia</p>
+            <p class="text-[11px] leading-relaxed">Na comparação ou no histórico, toque em <b>🛒 Lista</b> para adicionar itens e ver o total estimado.</p>
+          </div>`;
+        return;
+      }
+
+      container.innerHTML = shoppingList.map(item => {
+        const line = (Number(item.effectivePrice) || 0) * (Number(item.qty) || 1);
+        return `
+          <div class="bg-surface rounded-2xl p-3.5 border border-line">
+            <div class="flex items-start justify-between gap-2">
+              <div class="min-w-0 flex-1">
+                <h3 class="text-sm font-extrabold text-ink truncate">${escapeHtml(item.name)}</h3>
+                <p class="text-[11px] text-muted mt-0.5">🏪 ${escapeHtml(item.market)}${item.measureSummary ? ' • ' + escapeHtml(item.measureSummary) : ''}</p>
+                <p class="text-[11px] font-semibold text-muted mt-1">R$ ${formatCurrency(item.effectivePrice)} / un. efetiva</p>
+              </div>
+              <div class="text-right shrink-0">
+                <div class="text-base font-black text-brand-deep">R$ ${formatCurrency(line)}</div>
+              </div>
+            </div>
+            <div class="flex items-center justify-between mt-2.5 pt-2 border-t border-line">
+              <div class="inline-flex items-center gap-1 bg-soft rounded-lg border border-line p-0.5">
+                <button type="button" onclick="updateShoppingQty(${item.id}, -1)" class="w-8 h-8 rounded-md font-bold text-ink hover:bg-surface">−</button>
+                <span class="w-8 text-center text-sm font-extrabold">${item.qty || 1}</span>
+                <button type="button" onclick="updateShoppingQty(${item.id}, 1)" class="w-8 h-8 rounded-md font-bold text-ink hover:bg-surface">+</button>
+              </div>
+              <button type="button" onclick="removeShoppingItem(${item.id})" class="text-[11px] font-bold text-danger px-2 py-1 rounded-lg hover:bg-danger-soft">Remover</button>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    // ——— Evolução de preço ———
+    function showPriceEvolution(savedId) {
+      const base = historyItems.find(i => i.savedId === savedId);
+      if (!base) return;
+
+      const key = productKey(base);
+      const series = historyItems
+        .filter(i => productKey(i) === key)
+        .sort((a, b) => parseAppDate(a.savedAt || a.dateTime) - parseAppDate(b.savedAt || b.dateTime));
+
+      document.getElementById('evolutionTitle').textContent = base.name;
+      document.getElementById('evolutionSubtitle').textContent =
+        `${base.measureSummary || 'sem medida'} • ${series.length} registro(s)`;
+
+      const body = document.getElementById('evolutionBody');
+      if (series.length < 2) {
+        body.innerHTML = `
+          <div class="text-center py-6 px-3">
+            <p class="text-xs font-bold text-ink mb-1">Ainda não há evolução</p>
+            <p class="text-[11px] text-muted leading-relaxed">Salve o mesmo produto (mesmo nome e medida) em dias diferentes para ver se o preço subiu ou caiu.</p>
+          </div>`;
+      } else {
+        const first = series[0].scorePrice;
+        const last = series[series.length - 1].scorePrice;
+        const totalChange = first > 0 ? ((last - first) / first) * 100 : 0;
+        const trend = totalChange > 1
+          ? `<span class="text-danger font-extrabold">▲ +${totalChange.toFixed(0)}% desde o 1º registro</span>`
+          : totalChange < -1
+            ? `<span class="text-brand-deep font-extrabold">▼ ${totalChange.toFixed(0)}% desde o 1º registro</span>`
+            : `<span class="text-muted font-bold">≈ estável desde o 1º registro</span>`;
+
+        body.innerHTML = `
+          <div class="rounded-xl bg-soft border border-line px-3 py-2 mb-1 text-[11px]">${trend}</div>
+          ${series.map((item, idx) => {
+            const prev = idx > 0 ? series[idx - 1].scorePrice : null;
+            let delta = '';
+            if (prev !== null && prev > 0) {
+              const pct = ((item.scorePrice - prev) / prev) * 100;
+              if (Math.abs(pct) >= 0.5) {
+                delta = pct > 0
+                  ? `<span class="text-danger font-bold">+${pct.toFixed(0)}% vs anterior</span>`
+                  : `<span class="text-brand font-bold">${pct.toFixed(0)}% vs anterior</span>`;
+              } else {
+                delta = `<span class="text-faint">igual ao anterior</span>`;
+              }
+            } else {
+              delta = `<span class="text-faint">primeiro registro</span>`;
+            }
+            return `
+              <div class="rounded-xl border border-line p-3">
+                <div class="flex items-center justify-between gap-2 mb-1">
+                  <span class="text-[10px] font-bold text-brand-deep bg-brand-soft px-2 py-0.5 rounded-md border border-brand-mid">📅 ${escapeHtml(item.savedAt || item.dateTime || '')}</span>
+                  <span class="text-[10px] font-bold bg-market-soft text-market px-2 py-0.5 rounded-full">🏪 ${escapeHtml(item.market)}</span>
+                </div>
+                <div class="flex items-center justify-between gap-2">
+                  <div class="text-sm font-black text-ink">${escapeHtml(item.mainLabel)}</div>
+                  <div class="text-[11px]">${delta}</div>
+                </div>
+                <p class="text-[11px] text-muted mt-0.5">Prateleira R$ ${formatCurrency(item.rawPrice)} • efetivo R$ ${formatCurrency(item.effectivePrice)}</p>
+              </div>`;
+          }).join('')}`;
+      }
+
+      document.getElementById('evolutionModal').classList.remove('hidden');
+    }
+
+    function closeEvolutionModal() {
+      document.getElementById('evolutionModal').classList.add('hidden');
+    }
+
+    function onEvolutionBackdrop(event) {
+      if (event.target === document.getElementById('evolutionModal')) closeEvolutionModal();
+    }
+
+    // ——— Backup / CSV ———
+    function downloadBlob(filename, content, mime) {
+      const blob = new Blob([content], { type: mime });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function exportBackupJson() {
+      const payload = {
+        version: 3,
+        exportedAt: getFormattedDateTime(),
+        items,
+        historyItems,
+        shoppingList,
+        savedMarkets
+      };
+      const stamp = new Date().toISOString().slice(0, 10);
+      downloadBlob(`comparador-backup-${stamp}.json`, JSON.stringify(payload, null, 2), 'application/json');
+      showToast('✅ Backup JSON baixado.');
+    }
+
+    function csvEscape(val) {
+      const s = String(val ?? '');
+      if (/[",\n;]/.test(s)) return `"${s.replace(/"/g, '""')}"`;
+      return s;
+    }
+
+    function exportHistoryCsv() {
+      if (historyItems.length === 0) {
+        showToast('Histórico vazio — nada para exportar.');
+        return;
+      }
+      const header = ['data', 'mercado', 'produto', 'categoria', 'medida', 'preco_prateleira', 'preco_efetivo', 'custo_beneficio', 'promo'];
+      const rows = historyItems.map(i => [
+        i.savedAt || i.dateTime || '',
+        i.market || '',
+        i.name || '',
+        i.category || '',
+        i.measureSummary || '',
+        i.rawPrice,
+        i.effectivePrice,
+        i.mainLabel || '',
+        i.promoText || ''
+      ].map(csvEscape).join(';'));
+
+      const csv = '\uFEFF' + [header.join(';'), ...rows].join('\n');
+      const stamp = new Date().toISOString().slice(0, 10);
+      downloadBlob(`comparador-historico-${stamp}.csv`, csv, 'text/csv;charset=utf-8');
+      showToast('✅ CSV do histórico baixado.');
+    }
+
+    function importBackupFile(event) {
+      const file = event.target.files && event.target.files[0];
+      event.target.value = '';
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const text = String(reader.result || '');
+          if (file.name.toLowerCase().endsWith('.csv') || text.trim().startsWith('data;') || text.includes('mercado;produto')) {
+            importHistoryCsv(text);
+            return;
+          }
+          const data = JSON.parse(text);
+          openConfirmModal(
+            'Importar backup?',
+            'Isso substitui comparação, histórico, lista e mercados atuais pelos dados do arquivo.',
+            () => {
+              if (data.items) items = normalizeItemsState(data.items);
+              if (Array.isArray(data.historyItems)) historyItems = data.historyItems;
+              if (Array.isArray(data.shoppingList)) shoppingList = data.shoppingList;
+              if (Array.isArray(data.savedMarkets)) {
+                savedMarkets = data.savedMarkets.filter(m => typeof m === 'string');
+              }
+              saveToStorage();
+              renderMarketSuggestions();
+              renderList();
+              renderHistory();
+              renderShoppingList();
+              showToast('✅ Backup importado com sucesso.');
+            },
+            'Sim, importar'
+          );
+        } catch (e) {
+          console.error(e);
+          showToast('⚠️ Arquivo inválido. Use o JSON de backup ou CSV exportado.');
+        }
+      };
+      reader.readAsText(file, 'UTF-8');
+    }
+
+    function importHistoryCsv(text) {
+      const lines = text.replace(/^\uFEFF/, '').split(/\r?\n/).filter(l => l.trim());
+      if (lines.length < 2) {
+        showToast('CSV sem dados.');
+        return;
+      }
+      const sep = lines[0].includes(';') ? ';' : ',';
+      const headers = lines[0].split(sep).map(h => h.trim().toLowerCase());
+      const idx = (name) => headers.indexOf(name);
+
+      openConfirmModal(
+        'Importar CSV do histórico?',
+        `Serão adicionados até ${lines.length - 1} registros ao histórico atual (sem apagar o que já existe).`,
+        () => {
+          let added = 0;
+          for (let i = 1; i < lines.length; i++) {
+            const cols = lines[i].split(sep).map(c => c.replace(/^"|"$/g, '').replace(/""/g, '"'));
+            const name = cols[idx('produto')] || cols[2] || '';
+            if (!name) continue;
+            historyItems.unshift({
+              savedId: Date.now() + i + Math.floor(Math.random() * 1000),
+              savedAt: cols[idx('data')] || cols[0] || getFormattedDateTime(),
+              market: cols[idx('mercado')] || cols[1] || 'Mercado não informado',
+              name,
+              category: cols[idx('categoria')] || 'weight',
+              measureSummary: cols[idx('medida')] || '',
+              rawPrice: parseBRNumber(cols[idx('preco_prateleira')] || cols[5]) || 0,
+              effectivePrice: parseBRNumber(cols[idx('preco_efetivo')] || cols[6]) || 0,
+              mainLabel: cols[idx('custo_beneficio')] || cols[7] || '',
+              subLabel: '',
+              promoText: cols[idx('promo')] || cols[8] || '',
+              desc: '',
+              scorePrice: parseBRNumber(String(cols[idx('preco_efetivo')] || cols[6] || '0')) || 0,
+              dateTime: cols[idx('data')] || getFormattedDateTime()
+            });
+            added++;
+          }
+          saveToStorage();
+          renderHistory();
+          showToast(`✅ ${added} registro(s) importados do CSV.`);
+        },
+        'Sim, importar'
+      );
+    }
+
+    // PWA: instalar no celular
+    let deferredInstallPrompt = null;
+    const INSTALL_DISMISS_KEY = 'comparador_mercado_pro_install_dismiss_v1';
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredInstallPrompt = e;
+      if (!localStorage.getItem(INSTALL_DISMISS_KEY)) {
+        document.getElementById('installBanner').classList.remove('hidden');
+      }
+    });
+
+    function dismissInstallBanner() {
+      document.getElementById('installBanner').classList.add('hidden');
+      localStorage.setItem(INSTALL_DISMISS_KEY, '1');
+    }
+
+    async function promptInstall() {
+      if (!deferredInstallPrompt) {
+        showToast('No iPhone: Compartilhar → Adicionar à Tela de Início.');
+        return;
+      }
+      deferredInstallPrompt.prompt();
+      await deferredInstallPrompt.userChoice;
+      deferredInstallPrompt = null;
+      document.getElementById('installBanner').classList.add('hidden');
+    }
+
+    // Inicialização ao abrir a página
+    window.onload = function () {
+      updateHeaderClock();
+      setInterval(updateHeaderClock, 30000);
+      loadFromStorage();
+      renderQuickMeasureButtons();
+      renderList();
+      syncThemeControls();
+      syncMarketActionButton();
+      persistTheme();
+
+      const marketInput = document.getElementById('marketName');
+      if (marketInput) {
+        marketInput.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            addOrRenameMarketFromInput();
+          }
+        });
+        if (marketInput.value.trim()) {
+          suggestPaletteForMarket(marketInput.value);
+        }
+      }
+
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js').catch(() => {});
+      }
+    };
+  </script>
+</body>
+</html>

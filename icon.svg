@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Comparador de Mercado">
+  <rect width="128" height="128" rx="28" fill="#059669"/>
+  <path fill="#fff" d="M28 40h72v8H28zm8 16h56v8H36zm-4 16h64v8H32zm12 16h40v8H44z"/>
+  <circle cx="92" cy="88" r="18" fill="#047857"/>
+  <path fill="#fff" stroke="#fff" stroke-width="3" stroke-linecap="round" d="M84 88h16M92 80v16"/>
+</svg>
