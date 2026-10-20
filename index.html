@@ -116,6 +116,7 @@
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, sans-serif;
       -webkit-tap-highlight-color: transparent;
       padding-bottom: var(--tabbar-height);
+      scroll-padding-bottom: var(--tabbar-height);
       transition: background-color 220ms cubic-bezier(0.16,1,0.3,1), color 220ms cubic-bezier(0.16,1,0.3,1);
     }
 
@@ -262,7 +263,7 @@
 <body class="bg-canvas text-ink min-h-screen">
 
   <!-- Barra superior -->
-  <header class="sticky top-0 z-30 bg-canvas/88 backdrop-blur-md border-b border-line supports-[padding:max(0px)]:pt-[env(safe-area-inset-top)]">
+  <header class="sticky top-0 z-40 bg-canvas/88 backdrop-blur-md border-b border-line supports-[padding:max(0px)]:pt-[env(safe-area-inset-top)]">
     <div class="max-w-lg mx-auto px-4 py-2.5 flex items-center justify-between gap-2">
       <div class="min-w-0">
         <h1 class="text-[15px] font-bold leading-tight tracking-tight truncate text-ink">Comparador</h1>
@@ -1440,7 +1441,9 @@
     }
 
     function applyPreset(index) {
-      const preset = QUICK_PRESETS[currentCategory][index];
+      const presets = QUICK_PRESETS[currentCategory];
+      if (!presets) return;
+      const preset = presets[index];
       if (!preset) return;
 
       if (currentCategory === 'weight' || currentCategory === 'volume') {
@@ -2089,7 +2092,9 @@
 
     // Renderizar Lista de Comparação
     function renderList() {
+      if (!['weight', 'volume', 'unit'].includes(currentCategory)) return;
       const container = document.getElementById('resultsList');
+      if (!container) return;
       const list = [...items[currentCategory]].sort((a, b) => a.scorePrice - b.scorePrice);
 
       if (list.length === 0) {

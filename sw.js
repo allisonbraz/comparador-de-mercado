@@ -1,4 +1,4 @@
-const CACHE = 'comparador-mercado-v12';
+const CACHE = 'comparador-mercado-v13';
 const ASSETS = [
   '/',
   '/index.html',
