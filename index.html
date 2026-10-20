@@ -2,7 +2,7 @@
 <html lang="pt-BR" data-palette="assai" data-scheme="light">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#E8592A" id="metaThemeColor">
   <meta name="description" content="Compare preço por quilo, litro, rolo e unidade no mercado — rápido na prateleira.">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -45,47 +45,46 @@
       }
     };
   </script>
-  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     /* Cores inspiradas nas redes — só a paleta, sem logo/símbolo */
     :root, [data-palette="assai"] {
       --brand: #E8592A; --brand-deep: #C0431A; --brand-mid: #F09A78; --brand-soft: #FDECE6; --brand-fg: #FFF8F5;
-      --canvas: #F7F1EE; --surface: #FFFFFF; --soft: #EDE4DF; --ink: #2A1610; --muted: #6B4538; --faint: #8F6A5C; --line: #DCCFC8;
+      --canvas: #F2F2F7; --surface: #FFFFFF; --soft: #EDE4DF; --ink: #2A1610; --muted: #6B4538; --faint: #8F6A5C; --line: rgba(60, 60, 67, 0.12);
       --scrim: rgba(42, 22, 16, 0.55); --info: #034991; --info-soft: #E5EEF8; --market: #C9A000; --market-soft: #FFF6D1;
       --danger: #B42318; --danger-soft: #FCEBEA;
-      --shadow-lift: 0 1px 2px rgba(42, 22, 16, 0.06), 0 8px 24px rgba(42, 22, 16, 0.07);
+      --shadow-lift: 0 1px 2px rgba(42, 22, 16, 0.04), 0 4px 14px rgba(42, 22, 16, 0.05);
       --shadow-panel: 0 12px 40px rgba(42, 22, 16, 0.18); --meta-theme: #E8592A;
     }
     [data-palette="atacadao"] {
       --brand: #F5C400; --brand-deep: #D4A800; --brand-mid: #F7D96A; --brand-soft: #FFF8D9; --brand-fg: #1A1A1A;
-      --canvas: #F5F3EA; --surface: #FFFFFF; --soft: #EBE6D6; --ink: #1A1A1A; --muted: #4A4636; --faint: #7A7460; --line: #D6D0BB;
+      --canvas: #F2F2F7; --surface: #FFFFFF; --soft: #EBE6D6; --ink: #1A1A1A; --muted: #4A4636; --faint: #7A7460; --line: rgba(60, 60, 67, 0.12);
       --scrim: rgba(26, 26, 26, 0.55); --info: #00387B; --info-soft: #E5EEF6; --market: #9A6700; --market-soft: #FFF3D6;
       --danger: #B42318; --danger-soft: #FCEBEA;
-      --shadow-lift: 0 1px 2px rgba(26, 26, 26, 0.06), 0 8px 24px rgba(26, 26, 26, 0.07);
+      --shadow-lift: 0 1px 2px rgba(26, 26, 26, 0.04), 0 4px 14px rgba(26, 26, 26, 0.05);
       --shadow-panel: 0 12px 40px rgba(26, 26, 26, 0.18); --meta-theme: #F5C400;
     }
     [data-palette="carrefour"] {
       --brand: #00387B; --brand-deep: #00285A; --brand-mid: #5A86B5; --brand-soft: #E6EEF6; --brand-fg: #F5F8FC;
-      --canvas: #EEF1F5; --surface: #FFFFFF; --soft: #E0E5EC; --ink: #101820; --muted: #3A4A5C; --faint: #6A7A8C; --line: #C5CED8;
+      --canvas: #F2F2F7; --surface: #FFFFFF; --soft: #E0E5EC; --ink: #101820; --muted: #3A4A5C; --faint: #6A7A8C; --line: rgba(60, 60, 67, 0.12);
       --scrim: rgba(16, 24, 32, 0.55); --info: #007AC3; --info-soft: #E5F3FA; --market: #F67828; --market-soft: #FFF0E6;
       --danger: #BB1E10; --danger-soft: #FCEBEA;
-      --shadow-lift: 0 1px 2px rgba(16, 24, 32, 0.06), 0 8px 24px rgba(16, 24, 32, 0.06);
+      --shadow-lift: 0 1px 2px rgba(16, 24, 32, 0.04), 0 4px 14px rgba(16, 24, 32, 0.05);
       --shadow-panel: 0 12px 40px rgba(16, 24, 32, 0.18); --meta-theme: #00387B;
     }
     [data-palette="paodeacucar"] {
       --brand: #0B7A3E; --brand-deep: #085C2E; --brand-mid: #6BB88A; --brand-soft: #E6F5EC; --brand-fg: #F4FBF7;
-      --canvas: #EEF3F0; --surface: #FFFFFF; --soft: #E4ECE7; --ink: #14241A; --muted: #3F5A4B; --faint: #6B8576; --line: #C9D8CF;
+      --canvas: #F2F2F7; --surface: #FFFFFF; --soft: #E4ECE7; --ink: #14241A; --muted: #3F5A4B; --faint: #6B8576; --line: rgba(60, 60, 67, 0.12);
       --scrim: rgba(20, 36, 26, 0.55); --info: #1D5F8A; --info-soft: #E5F2FA; --market: #C9A000; --market-soft: #FFF6D1;
       --danger: #B42318; --danger-soft: #FCEBEA;
-      --shadow-lift: 0 1px 2px rgba(20, 36, 26, 0.06), 0 8px 24px rgba(20, 36, 26, 0.06);
+      --shadow-lift: 0 1px 2px rgba(20, 36, 26, 0.04), 0 4px 14px rgba(20, 36, 26, 0.05);
       --shadow-panel: 0 12px 40px rgba(20, 36, 26, 0.18); --meta-theme: #0B7A3E;
     }
     [data-palette="extra"] {
       --brand: #EB1D29; --brand-deep: #B8141E; --brand-mid: #F07A82; --brand-soft: #FDE8E9; --brand-fg: #FFF7F7;
-      --canvas: #F6F0F0; --surface: #FFFFFF; --soft: #EDE3E3; --ink: #241414; --muted: #644242; --faint: #8A6565; --line: #D8C8C8;
+      --canvas: #F2F2F7; --surface: #FFFFFF; --soft: #EDE3E3; --ink: #241414; --muted: #644242; --faint: #8A6565; --line: rgba(60, 60, 67, 0.12);
       --scrim: rgba(36, 20, 20, 0.55); --info: #007AC3; --info-soft: #E5F3FA; --market: #EF7706; --market-soft: #FFF0E0;
       --danger: #7E0409; --danger-soft: #FCEBEA;
-      --shadow-lift: 0 1px 2px rgba(36, 20, 20, 0.06), 0 8px 24px rgba(36, 20, 20, 0.07);
+      --shadow-lift: 0 1px 2px rgba(36, 20, 20, 0.04), 0 4px 14px rgba(36, 20, 20, 0.05);
       --shadow-panel: 0 12px 40px rgba(36, 20, 20, 0.18); --meta-theme: #EB1D29;
     }
     [data-scheme="dark"] {
@@ -107,11 +106,111 @@
     html { color-scheme: light; }
     html[data-scheme="dark"] { color-scheme: dark; }
 
+    :root {
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --tabbar-height: calc(49px + var(--safe-bottom) + 8px);
+      --above-tabbar: calc(72px + var(--safe-bottom));
+    }
+
     body {
-      font-family: 'Source Sans 3', system-ui, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, sans-serif;
       -webkit-tap-highlight-color: transparent;
-      padding-bottom: env(safe-area-inset-bottom, 0);
+      padding-bottom: var(--tabbar-height);
       transition: background-color 220ms cubic-bezier(0.16,1,0.3,1), color 220ms cubic-bezier(0.16,1,0.3,1);
+    }
+
+    .large-title {
+      font-size: 34px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      line-height: 1.08;
+      margin: 2px 0 0;
+    }
+
+    .section-hint {
+      font-size: 13px;
+      color: var(--muted);
+      margin: 6px 0 16px;
+      line-height: 1.35;
+    }
+
+    .tabbar {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: var(--tabbar-height);
+      padding-bottom: var(--safe-bottom);
+      background: color-mix(in srgb, var(--surface) 86%, transparent);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-top: 0.5px solid var(--line);
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      z-index: 35;
+    }
+
+    .tab {
+      border: none;
+      background: transparent;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      cursor: pointer;
+      color: var(--faint);
+      padding-top: 6px;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .tab.active {
+      color: var(--brand-deep);
+    }
+
+    .tab svg {
+      width: 24px;
+      height: 24px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.7;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .tab.active svg {
+      fill: color-mix(in srgb, var(--brand) 18%, transparent);
+    }
+
+    .tab span.tab-label {
+      font-size: 10px;
+      font-weight: 500;
+    }
+
+    .tab-badge {
+      position: absolute;
+      top: 4px;
+      left: calc(50% + 10px);
+      min-width: 1rem;
+      padding: 0 0.35rem;
+      font-size: 9px;
+      font-weight: 800;
+      line-height: 1.25;
+      border-radius: 999px;
+      color: var(--brand-fg);
+      background: var(--brand);
+    }
+
+    #tab-history .tab-badge {
+      background: var(--market);
+    }
+
+    .float-above-tabbar {
+      bottom: var(--above-tabbar) !important;
+    }
+
+    html[data-scheme="dark"] .tabbar {
+      background: color-mix(in srgb, var(--surface) 88%, transparent);
     }
     ::selection { background: color-mix(in srgb, var(--brand) 28%, transparent); color: var(--ink); }
     :focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
@@ -160,29 +259,25 @@
     })();
   </script>
 </head>
-<body class="bg-canvas text-ink min-h-screen pb-24">
+<body class="bg-canvas text-ink min-h-screen">
 
-  <!-- Cabeçalho Fixo -->
-  <header class="bg-brand text-brand-fg sticky top-0 z-30 shadow-lift">
-    <div class="max-w-lg mx-auto px-4 py-3 flex items-center justify-between gap-2">
-      <div class="flex items-center gap-2 min-w-0">
-        <span class="text-2xl shrink-0" aria-hidden="true">🛒</span>
-        <div class="min-w-0">
-          <h1 class="text-base font-extrabold leading-tight tracking-tight truncate">Comparador de Mercado</h1>
-          <p class="text-[11px] text-brand-fg/90 font-medium truncate">Economize comparando o preço real</p>
-        </div>
+  <!-- Barra superior -->
+  <header class="sticky top-0 z-30 bg-canvas/88 backdrop-blur-md border-b border-line supports-[padding:max(0px)]:pt-[env(safe-area-inset-top)]">
+    <div class="max-w-lg mx-auto px-4 py-2.5 flex items-center justify-between gap-2">
+      <div class="min-w-0">
+        <h1 class="text-[15px] font-bold leading-tight tracking-tight truncate text-ink">Comparador</h1>
+        <p id="headerClock" class="text-[11px] text-muted font-medium truncate hidden sm:block"></p>
       </div>
       <div class="flex items-center gap-1.5 shrink-0">
-        <div id="headerClock" class="hidden sm:block text-right text-[11px] bg-brand-deep/70 px-2.5 py-1 rounded-lg font-medium text-brand-fg"></div>
-        <button type="button" onclick="openOnboarding(true)" class="inline-flex items-center justify-center h-9 px-2.5 rounded-xl bg-brand-deep/50 hover:bg-brand-deep text-brand-fg text-[11px] font-extrabold transition" title="Como usar">
+        <button type="button" onclick="openOnboarding(true)" class="inline-flex items-center justify-center h-9 px-3 rounded-xl bg-surface text-ink text-[12px] font-semibold border border-line hover:bg-soft transition" title="Como usar">
           Ajuda
         </button>
         <div class="relative">
-          <button type="button" id="themeToggleBtn" onclick="toggleThemePanel()" class="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-brand-deep/50 hover:bg-brand-deep text-brand-fg transition" aria-expanded="false" aria-controls="themePanel" title="Aparência">
-            <span id="themeToggleIcon" aria-hidden="true">🎨</span>
+          <button type="button" id="themeToggleBtn" onclick="toggleThemePanel()" class="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-surface text-ink border border-line hover:bg-soft transition" aria-expanded="false" aria-controls="themePanel" title="Aparência">
+            <svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
             <span class="sr-only">Aparência</span>
           </button>
-          <div id="themePanel" class="theme-panel absolute right-0 top-full mt-2 w-64 rounded-2xl bg-surface text-ink border border-line shadow-panel p-3 z-40" hidden>
+          <div id="themePanel" class="theme-panel absolute right-0 top-full mt-2 w-64 rounded-xl bg-surface text-ink border border-line shadow-panel p-3 z-40" hidden>
             <p class="text-xs font-extrabold text-ink mb-2">Aparência</p>
             <div class="flex items-center justify-between gap-2 mb-3 p-2 rounded-xl bg-soft">
               <span class="text-[11px] font-bold text-muted">Modo</span>
@@ -206,43 +301,15 @@
     </div>
   </header>
   <!-- Container Principal -->
-  <main class="max-w-lg mx-auto px-3 pt-3">
-
-    <!-- Abas de Navegação -->
-    <nav class="grid grid-cols-5 gap-1 mb-3 bg-surface p-1.5 rounded-2xl shadow-lift border border-line">
-      <button onclick="setCategory('weight')" id="tab-weight" class="tab-btn flex flex-col items-center justify-center py-2 px-0.5 rounded-xl text-[11px] font-bold transition-all bg-brand-soft text-brand-deep border-2 border-brand">
-        <span class="text-base mb-0.5">⚖️</span>
-        <span>Peso</span>
-      </button>
-
-      <button onclick="setCategory('volume')" id="tab-volume" class="tab-btn flex flex-col items-center justify-center py-2 px-0.5 rounded-xl text-[11px] font-bold transition-all text-muted border-2 border-transparent hover:bg-soft">
-        <span class="text-base mb-0.5">🧴</span>
-        <span>Líquidos</span>
-      </button>
-
-      <button onclick="setCategory('unit')" id="tab-unit" class="tab-btn flex flex-col items-center justify-center py-2 px-0.5 rounded-xl text-[11px] font-bold transition-all text-muted border-2 border-transparent hover:bg-soft">
-        <span class="text-base mb-0.5">🧻</span>
-        <span>Pacotes</span>
-      </button>
-
-      <button onclick="setCategory('list')" id="tab-list" class="tab-btn relative flex flex-col items-center justify-center py-2 px-0.5 rounded-xl text-[11px] font-bold transition-all text-muted border-2 border-transparent hover:bg-soft">
-        <span class="text-base mb-0.5">🛒</span>
-        <span>Compras</span>
-        <span id="listCountBadge" class="hidden absolute -top-1 -right-0.5 bg-brand text-brand-fg text-[9px] font-extrabold px-1.5 py-0.2 rounded-full shadow">0</span>
-      </button>
-
-      <button onclick="setCategory('history')" id="tab-history" class="tab-btn relative flex flex-col items-center justify-center py-2 px-0.5 rounded-xl text-[11px] font-bold transition-all text-muted border-2 border-transparent hover:bg-soft">
-        <span class="text-base mb-0.5">💾</span>
-        <span>Histórico</span>
-        <span id="historyCountBadge" class="hidden absolute -top-1 -right-0.5 bg-market text-brand-fg text-[9px] font-extrabold px-1.5 py-0.2 rounded-full shadow">0</span>
-      </button>
-    </nav>
+  <main class="max-w-lg mx-auto px-4 pt-2 pb-2">
 
     <!-- SEÇÃO DE COMPARAÇÃO (Peso, Líquidos, Pacotes) -->
-    <section id="compareSection">
-      
+    <section id="compareSection" class="hidden">
+      <h2 id="compareLargeTitle" class="large-title">Peso</h2>
+      <p id="compareSectionHint" class="section-hint">Comida, grãos, carnes — preço por quilo.</p>
+
       <!-- Card de Formulário -->
-      <div class="bg-surface rounded-2xl p-4 shadow-lift border border-line mb-4">
+      <div class="bg-surface rounded-xl p-4 shadow-sm border border-line mb-4">
         
         <!-- Campo: Nome do Mercado (Mantém preenchido para facilitar no corredor) -->
         <div class="mb-3">
@@ -496,13 +563,13 @@
 
     <!-- SEÇÃO DE HISTÓRICO DE PREÇOS SALVOS -->
     <section id="historySection" class="hidden">
-      
+      <h2 class="large-title">Histórico</h2>
+      <p class="section-hint">Preços que você salvou. Só neste aparelho.</p>
+
       <!-- Barra de Busca e Filtros do Histórico -->
-      <div class="bg-surface rounded-2xl p-3.5 shadow-sm border border-line mb-3">
+      <div class="bg-surface rounded-xl p-3.5 shadow-sm border border-line mb-3">
         <div class="flex items-center justify-between mb-1 gap-2">
-          <h2 class="text-sm font-extrabold text-ink flex items-center gap-1.5">
-            <span>💾</span> Histórico de preços
-          </h2>
+          <h2 class="text-sm font-bold text-ink">Busca e backup</h2>
           <button 
             type="button" 
             onclick="requestClearHistory()" 
@@ -556,9 +623,11 @@
     </section>
 
     <!-- SEÇÃO LISTA DE COMPRAS -->
-    <section id="listSection" class="hidden">
-      <div class="bg-surface rounded-2xl p-3.5 shadow-lift border border-line mb-3">
-        <h2 class="text-base font-extrabold text-ink mb-1">Lista de compras</h2>
+    <section id="listSection">
+      <h2 class="large-title">Compras</h2>
+      <p class="section-hint">Recebeu uma lista? Cole abaixo. Depois compare no corredor.</p>
+
+      <div class="bg-surface rounded-xl p-3.5 shadow-sm border border-line mb-3">
         <p class="text-[11px] text-muted mb-3 leading-snug">Tudo fica salvo só neste celular ou computador. Nada é enviado para a nuvem.</p>
 
         <div class="grid grid-cols-3 gap-1.5 mb-3">
@@ -615,14 +684,14 @@
 
       <div id="shoppingList" class="space-y-2.5 mb-3"></div>
 
-      <div class="bg-surface rounded-2xl p-3.5 shadow-sm border border-line mb-3">
-        <h2 class="text-sm font-extrabold text-ink mb-1">Seus produtos</h2>
+      <div class="bg-surface rounded-xl p-3.5 shadow-sm border border-line mb-3">
+        <h2 class="text-sm font-bold text-ink mb-1">Seus produtos</h2>
         <p class="text-[11px] text-muted mb-2.5">Toque para colocar de novo na lista. × remove o nome guardado.</p>
         <div id="productPoolChips" class="flex flex-wrap gap-2"></div>
       </div>
 
-      <div class="bg-surface rounded-2xl p-3.5 shadow-sm border border-line mb-3">
-        <h2 class="text-sm font-extrabold text-ink mb-1">Listas guardadas</h2>
+      <div class="bg-surface rounded-xl p-3.5 shadow-sm border border-line mb-3">
+        <h2 class="text-sm font-bold text-ink mb-1">Listas guardadas</h2>
         <p class="text-[11px] text-muted mb-2.5">Carregue depois, envie no WhatsApp ou exclua.</p>
         <div id="savedListsContainer" class="space-y-2.5"></div>
       </div>
@@ -644,6 +713,31 @@
     </footer>
 
   </main>
+
+  <nav id="bottomTabBar" class="tabbar" aria-label="Navegação principal">
+    <button type="button" onclick="setCategory('list')" id="tab-list" class="tab tab-btn relative active" aria-current="page">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7h12l-1 12H7L6 7z"/><path d="M9 7V5a3 3 0 0 1 6 0v2"/></svg>
+      <span class="tab-label">Compras</span>
+      <span id="listCountBadge" class="tab-badge hidden">0</span>
+    </button>
+    <button type="button" onclick="setCategory('weight')" id="tab-weight" class="tab tab-btn relative" aria-current="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v16M5 10h14M7 20h10"/><circle cx="12" cy="8" r="2.2"/></svg>
+      <span class="tab-label">Peso</span>
+    </button>
+    <button type="button" onclick="setCategory('volume')" id="tab-volume" class="tab tab-btn relative" aria-current="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3h8l1 5v11a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2V8L8 3z"/><path d="M8 8h8"/></svg>
+      <span class="tab-label">Líquidos</span>
+    </button>
+    <button type="button" onclick="setCategory('unit')" id="tab-unit" class="tab tab-btn relative" aria-current="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="7" width="16" height="13" rx="2"/><path d="M8 7V5h8v2M9 12h6"/></svg>
+      <span class="tab-label">Pacotes</span>
+    </button>
+    <button type="button" onclick="setCategory('history')" id="tab-history" class="tab tab-btn relative" aria-current="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 8v5l3 2"/></svg>
+      <span class="tab-label">Histórico</span>
+      <span id="historyCountBadge" class="tab-badge hidden">0</span>
+    </button>
+  </nav>
 
   <!-- Onboarding -->
   <div id="onboardingOverlay" class="fixed inset-0 z-[60] hidden bg-scrim flex items-end sm:items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="onboardTitle">
@@ -673,13 +767,13 @@
   </div>
 
   <!-- Toast de Notificação (Substitui alert()) -->
-  <div id="toastBanner" class="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 hidden max-w-sm w-[92%] bg-ink text-brand-fg px-4 py-3 rounded-xl shadow-xl border border-line flex items-center justify-between gap-3 transition-all">
+  <div id="toastBanner" class="float-above-tabbar fixed left-1/2 -translate-x-1/2 z-50 hidden max-w-sm w-[92%] bg-ink text-brand-fg px-4 py-3 rounded-xl shadow-xl border border-line flex items-center justify-between gap-3 transition-all">
     <span id="toastMessage" class="text-xs font-semibold leading-snug"></span>
     <button onclick="hideToast()" class="text-faint hover:text-brand-fg text-xs font-bold px-1">OK</button>
   </div>
 
   <!-- Banner para instalar PWA -->
-  <div id="installBanner" class="fixed bottom-4 left-1/2 -translate-x-1/2 z-40 hidden max-w-sm w-[92%] bg-brand-deep text-brand-fg px-4 py-3 rounded-xl shadow-xl flex items-center justify-between gap-3">
+  <div id="installBanner" class="float-above-tabbar fixed left-1/2 -translate-x-1/2 z-40 hidden max-w-sm w-[92%] bg-brand-deep text-brand-fg px-4 py-3 rounded-xl shadow-xl flex items-center justify-between gap-3">
     <span class="text-xs font-semibold leading-snug">Instale no celular para abrir offline no mercado.</span>
     <div class="flex items-center gap-2 shrink-0">
       <button type="button" onclick="dismissInstallBanner()" class="text-[11px] font-bold text-brand-fg/90">Agora não</button>
@@ -747,7 +841,7 @@
     const STORAGE_KEY_SAVED_LISTS = 'comparador_mercado_pro_saved_lists_v3';
     const STORAGE_KEY_PRODUCT_POOL = 'comparador_mercado_pro_product_pool_v3';
 
-    let currentCategory = 'weight';
+    let currentCategory = 'list';
     let currentHistoryFilter = 'all';
 
     // Estado dos itens em comparação e salvos
@@ -817,7 +911,7 @@
     function updateHeaderClock() {
       const el = document.getElementById('headerClock');
       if (el) {
-        el.innerHTML = `📅 ${getFormattedDateTime()}`;
+        el.textContent = getFormattedDateTime();
       }
     }
 
@@ -964,8 +1058,6 @@
         darkBtn.className = `px-2.5 py-1 rounded-md text-[11px] font-bold ${scheme === 'dark' ? on : off}`;
       }
 
-      const icon = document.getElementById('themeToggleIcon');
-      if (icon) icon.textContent = scheme === 'dark' ? '🌙' : '🎨';
     }
 
     function setPalette(palette) {
@@ -1409,21 +1501,31 @@
       togglePromo();
     }
 
+    const LAST_TAB_KEY = 'comparador_mercado_pro_last_tab_v1';
+    const COMPARE_SECTION_COPY = {
+      weight: { title: 'Peso', hint: 'Comida, grãos, carnes — preço por quilo.' },
+      volume: { title: 'Líquidos', hint: 'Bebidas e limpeza — preço por litro.' },
+      unit: { title: 'Pacotes', hint: 'Rolos, ovos, unidades — preço por un. ou metro.' }
+    };
+
+    function updateBottomTabVisual(cat) {
+      ['list', 'weight', 'volume', 'unit', 'history'].forEach(t => {
+        const btn = document.getElementById('tab-' + t);
+        if (!btn) return;
+        const isActive = t === cat;
+        btn.classList.toggle('active', isActive);
+        btn.setAttribute('aria-current', isActive ? 'page' : 'false');
+      });
+    }
+
     // Troca de Aba
     function setCategory(cat) {
       currentCategory = cat;
+      updateBottomTabVisual(cat);
 
-      // Atualiza visual das abas
-      const allTabs = ['weight', 'volume', 'unit', 'list', 'history'];
-      allTabs.forEach(t => {
-        const btn = document.getElementById('tab-' + t);
-        if (!btn) return;
-        if (t === cat) {
-          btn.className = 'tab-btn relative flex flex-col items-center justify-center py-2 px-0.5 rounded-xl text-[11px] font-bold transition-all bg-brand-soft text-brand-deep border-2 border-brand';
-        } else {
-          btn.className = 'tab-btn relative flex flex-col items-center justify-center py-2 px-0.5 rounded-xl text-[11px] font-bold transition-all text-muted border-2 border-transparent hover:bg-soft';
-        }
-      });
+      try {
+        localStorage.setItem(LAST_TAB_KEY, cat);
+      } catch (e) {}
 
       const compareSection = document.getElementById('compareSection');
       const historySection = document.getElementById('historySection');
@@ -1448,6 +1550,14 @@
       }
 
       compareSection.classList.remove('hidden');
+
+      const copy = COMPARE_SECTION_COPY[cat];
+      const compareTitle = document.getElementById('compareLargeTitle');
+      const compareHint = document.getElementById('compareSectionHint');
+      if (copy && compareTitle && compareHint) {
+        compareTitle.textContent = copy.title;
+        compareHint.textContent = copy.hint;
+      }
 
       const standardFields = document.getElementById('standardFields');
       const unitFields = document.getElementById('unitFields');
@@ -3129,14 +3239,18 @@
       updateHeaderClock();
       setInterval(updateHeaderClock, 30000);
       loadFromStorage();
-      renderQuickMeasureButtons();
-      renderShoppingPickChips();
-      renderProductPool();
-      renderSavedLists();
-      renderList();
       syncThemeControls();
       syncMarketActionButton();
       persistTheme();
+
+      let initialTab = 'list';
+      try {
+        const savedTab = localStorage.getItem(LAST_TAB_KEY);
+        if (savedTab && ['weight', 'volume', 'unit', 'list', 'history'].includes(savedTab)) {
+          initialTab = savedTab;
+        }
+      } catch (e) {}
+      setCategory(initialTab);
       openOnboarding(false);
 
       const marketInput = document.getElementById('marketName');
