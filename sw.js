@@ -1,4 +1,4 @@
-const CACHE = 'comparador-mercado-v15';
+const CACHE = 'comparador-mercado-v16';
 const ASSETS = [
   '/',
   '/index.html',
@@ -25,9 +25,33 @@ self.addEventListener('activate', (event) => {
   );
 });
 
+function isHtmlRequest(request) {
+  if (request.mode === 'navigate') return true;
+  const url = new URL(request.url);
+  if (url.origin !== self.location.origin) return false;
+  const path = url.pathname;
+  return path === '/' || path === '/index.html' || path.endsWith('.html');
+}
+
 self.addEventListener('fetch', (event) => {
   const { request } = event;
   if (request.method !== 'GET') return;
+
+  // HTML sempre da rede quando online (evita toast/UI antiga grudada no cache)
+  if (isHtmlRequest(request)) {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          if (response && response.ok) {
+            const clone = response.clone();
+            caches.open(CACHE).then((cache) => cache.put(request, clone));
+          }
+          return response;
+        })
+        .catch(() => caches.match(request).then((cached) => cached || caches.match('/index.html')))
+    );
+    return;
+  }
 
   event.respondWith(
     caches.match(request).then((cached) => {
@@ -45,10 +69,6 @@ self.addEventListener('fetch', (event) => {
         })
         .catch(() => cached);
 
-      // Rede primeiro quando online (HTML sempre fresco); cache como fallback offline
-      if (request.mode === 'navigate') {
-        return network.then((r) => r || cached).catch(() => cached);
-      }
       return cached || network;
     })
   );

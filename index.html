@@ -758,9 +758,9 @@
   </div>
 
   <!-- Toast de Notificação (Substitui alert()) -->
-  <div id="toastBanner" class="float-above-tabbar fixed left-1/2 -translate-x-1/2 z-50 hidden max-w-sm w-[92%] bg-ink text-brand-fg px-4 py-3 rounded-xl shadow-xl border border-line flex items-center justify-between gap-3 transition-all">
-    <span id="toastMessage" class="text-xs font-semibold leading-snug"></span>
-    <button onclick="hideToast()" class="text-faint hover:text-brand-fg text-xs font-bold px-1">OK</button>
+  <div id="toastBanner" class="toast-banner float-above-tabbar fixed left-1/2 -translate-x-1/2 z-50 hidden max-w-sm w-[92%] px-4 py-3 rounded-xl shadow-xl border flex items-center justify-between gap-3 transition-all">
+    <span id="toastMessage" class="text-xs font-semibold leading-snug text-[#f5f5f7]"></span>
+    <button type="button" onclick="hideToast()" class="toast-ok text-xs font-bold px-1 shrink-0">OK</button>
   </div>
 
   <!-- Banner para instalar PWA -->
@@ -919,6 +919,13 @@
     function showToast(message) {
       const banner = document.getElementById('toastBanner');
       const msgEl = document.getElementById('toastMessage');
+      // Contraste fixo via inline (não depende de paleta nem de CSS antigo em cache)
+      banner.style.background = '#1c1c1e';
+      banner.style.color = '#f5f5f7';
+      banner.style.borderColor = 'rgba(255,255,255,0.12)';
+      msgEl.style.color = '#f5f5f7';
+      const okBtn = banner.querySelector('.toast-ok, button');
+      if (okBtn) okBtn.style.color = '#ffd60a';
       msgEl.textContent = message;
       banner.classList.remove('hidden');
       if (toastTimer) clearTimeout(toastTimer);
