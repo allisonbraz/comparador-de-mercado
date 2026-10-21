@@ -304,7 +304,7 @@
   <!-- Container Principal -->
   <main class="max-w-lg mx-auto px-4 pt-2 pb-2">
 
-    <!-- SEÇÃO DE COMPARAÇÃO (Peso, Líquidos, Pacotes) -->
+    <!-- SEÇÃO DE COMPARAÇÃO (Peso, Líquidos, Unidades) -->
     <section id="compareSection" class="hidden">
       <h2 id="compareLargeTitle" class="large-title">Peso</h2>
       <p id="compareSectionHint" class="section-hint">Comida, grãos, carnes — preço por quilo.</p>
@@ -312,20 +312,20 @@
       <!-- Card de Formulário -->
       <div class="bg-surface rounded-xl p-4 shadow-sm border border-line mb-4">
         
-        <!-- Campo: Nome do Mercado (Mantém preenchido para facilitar no corredor) -->
+        <!-- Campo: Nome do Mercado -->
         <div class="mb-3">
           <div class="flex items-center justify-between mb-1">
             <label for="marketName" class="text-xs font-bold text-ink flex items-center gap-1">
-              <span>🏪</span> Nome do Mercado / Atacadista
+              <span>🏪</span> Nome do mercado
             </label>
-            <span class="text-[10px] text-brand font-semibold">Fica fixo para agilizar</span>
+            <span class="text-[10px] text-muted font-semibold">Você digita</span>
           </div>
           <div class="relative">
             <input 
               type="text" 
               id="marketName" 
               list="marketSuggestions"
-              placeholder="Ex: Americanas, Assaí, mercado da esquina..." 
+              placeholder="Ex.: mercado da esquina, Assaí..." 
               enterkeyhint="done"
               autocomplete="off"
               class="w-full px-3 py-2.5 pr-20 rounded-xl border border-line text-sm font-medium focus:outline-none focus:border-brand focus:ring-2 focus:ring-brand/20 bg-soft focus:bg-surface transition"
@@ -421,37 +421,57 @@
           <!-- Gerado dinamicamente conforme a aba (ex: 400g, 500g, 800g, 1kg) -->
         </div>
 
-        <!-- Campos para UNIDADES / PAPEL HIGIÊNICO -->
-        <div id="unitFields" class="hidden grid-cols-2 gap-2.5 mb-3">
-          <div>
-            <label for="packUnits" class="block text-xs font-bold text-ink mb-1">Qtd. no Pacote</label>
-            <input 
-              type="text" 
-              id="packUnits" 
-              inputmode="decimal" 
-              enterkeyhint="next"
-              autocomplete="off"
-              placeholder="Ex: 12 (rolos/un)" 
-              class="w-full px-3 py-2.5 rounded-xl border border-line text-base font-semibold focus:outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
-            >
+        <!-- Campos para UNIDADES (rolo, ovo, pacote) -->
+        <div id="unitFields" class="hidden mb-3">
+          <p class="text-[11px] text-muted mb-2 leading-snug">
+            Ovo? Só a quantidade. Papel? Quantidade + tamanho de cada un. Bebida em garrafa? Use a aba <b>Líquidos</b>.
+          </p>
+          <div class="grid grid-cols-2 gap-2.5 mb-2">
+            <div>
+              <label for="packUnits" class="block text-xs font-bold text-ink mb-1">Qtd. no pacote</label>
+              <input 
+                type="text" 
+                id="packUnits" 
+                inputmode="decimal" 
+                enterkeyhint="next"
+                autocomplete="off"
+                placeholder="Ex.: 4, 12, 30" 
+                oninput="updateUnitTotalHint()"
+                class="w-full px-3 py-2.5 rounded-xl border border-line text-base font-semibold focus:outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
+              >
+            </div>
+            <div>
+              <label for="measurePerUnit" class="block text-xs font-bold text-ink mb-1">Tamanho de cada un. <span class="font-normal text-faint">(opc.)</span></label>
+              <div class="flex gap-1.5">
+                <input 
+                  type="text" 
+                  id="measurePerUnit" 
+                  inputmode="decimal" 
+                  enterkeyhint="next"
+                  autocomplete="off"
+                  placeholder="Ex.: 30" 
+                  oninput="updateUnitTotalHint()"
+                  class="min-w-0 flex-1 px-3 py-2.5 rounded-xl border border-line text-base font-semibold focus:outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
+                >
+                <select 
+                  id="measureUnit"
+                  onchange="updateUnitTotalHint()"
+                  class="w-[4.25rem] shrink-0 px-1.5 py-2.5 rounded-xl border border-line text-sm font-bold bg-soft focus:outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
+                  aria-label="Unidade do tamanho"
+                >
+                  <option value="m">m</option>
+                  <option value="ml">ml</option>
+                  <option value="l">L</option>
+                </select>
+              </div>
+            </div>
           </div>
-          <div>
-            <label for="measurePerUnit" class="block text-xs font-bold text-ink mb-1">Metros por Un. <span class="font-normal text-faint">(opc.)</span></label>
-            <input 
-              type="text" 
-              id="measurePerUnit" 
-              inputmode="decimal" 
-              enterkeyhint="next"
-              autocomplete="off"
-              placeholder="Ex: 30 (metros)" 
-              class="w-full px-3 py-2.5 rounded-xl border border-line text-base font-semibold focus:outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
-            >
-          </div>
+          <p id="unitTotalHint" class="hidden text-[11px] font-semibold text-brand-deep leading-snug"></p>
         </div>
 
         <!-- Campo: Preço na Prateleira -->
         <div class="mb-3">
-          <label for="prodPrice" class="block text-xs font-bold text-ink mb-1">💰 Preço na Prateleira (R$)</label>
+          <label for="prodPrice" class="block text-xs font-bold text-ink mb-1">💰 Preço na prateleira (R$)</label>
           <div class="relative">
             <span class="absolute left-3 top-1/2 -translate-y-1/2 text-faint font-bold text-sm">R$</span>
             <input 
@@ -464,53 +484,9 @@
               class="w-full pl-9 pr-3 py-2.5 rounded-xl border border-line text-lg font-extrabold text-ink focus:outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
             >
           </div>
-        </div>
-
-        <!-- Promoção: Leve X Pague Y ou Atacado -->
-        <div class="mb-3">
-          <label class="flex items-center gap-2.5 p-2.5 rounded-xl bg-info-soft/80 border border-info cursor-pointer select-none">
-            <input type="checkbox" id="promoCheck" onchange="togglePromo()" class="w-4 h-4 accent-brand rounded cursor-pointer">
-            <span class="text-xs font-bold text-info">🏷️ Tem promoção ou preço de atacado?</span>
-          </label>
-
-          <div id="promoBox" class="hidden mt-2 p-3 rounded-xl bg-info-soft border border-info">
-            <div class="grid grid-cols-2 gap-2 mb-2.5">
-              <label class="flex items-center gap-1.5 p-2 rounded-lg bg-surface border border-info cursor-pointer">
-                <input type="radio" name="promoMode" value="leve" checked onchange="updatePromoModeUI()" class="accent-brand">
-                <span class="text-[11px] font-bold text-info">Leve X Pague Y</span>
-              </label>
-              <label class="flex items-center gap-1.5 p-2 rounded-lg bg-surface border border-info cursor-pointer">
-                <input type="radio" name="promoMode" value="atacado" onchange="updatePromoModeUI()" class="accent-brand">
-                <span class="text-[11px] font-bold text-info">Atacado (a partir de X)</span>
-              </label>
-            </div>
-
-            <div id="promoLeveFields" class="grid grid-cols-2 gap-2.5">
-              <div>
-                <label for="promoTake" class="block text-[11px] font-bold text-info mb-1">Leve (qtd.)</label>
-                <input type="text" id="promoTake" inputmode="numeric" autocomplete="off" placeholder="Ex: 3" class="w-full px-2.5 py-2 rounded-lg border border-info text-sm font-bold bg-surface">
-              </div>
-              <div>
-                <label for="promoPay" class="block text-[11px] font-bold text-info mb-1">Pague (qtd.)</label>
-                <input type="text" id="promoPay" inputmode="numeric" autocomplete="off" placeholder="Ex: 2" class="w-full px-2.5 py-2 rounded-lg border border-info text-sm font-bold bg-surface">
-              </div>
-            </div>
-
-            <div id="promoAtacadoFields" class="hidden grid-cols-2 gap-2.5">
-              <div>
-                <label for="atacadoMinQty" class="block text-[11px] font-bold text-info mb-1">A partir de (un.)</label>
-                <input type="text" id="atacadoMinQty" inputmode="numeric" autocomplete="off" placeholder="Ex: 3" class="w-full px-2.5 py-2 rounded-lg border border-info text-sm font-bold bg-surface">
-              </div>
-              <div>
-                <label for="atacadoPrice" class="block text-[11px] font-bold text-info mb-1">Preço atacado (R$)</label>
-                <input type="text" id="atacadoPrice" inputmode="decimal" autocomplete="off" placeholder="Ex: 8,99" class="w-full px-2.5 py-2 rounded-lg border border-info text-sm font-bold bg-surface">
-              </div>
-            </div>
-
-            <p id="promoHelpText" class="text-[11px] text-info mt-2 leading-snug">
-              💡 Calcula o valor real por unidade na promoção Leve X Pague Y.
-            </p>
-          </div>
+          <p class="text-[11px] text-muted mt-1.5 leading-snug">
+            Tem promo? Digite o preço que você <b>realmente paga</b> pela embalagem (ex.: leve 3 pague 2 → use o valor efetivo).
+          </p>
         </div>
 
         <!-- Botões de Ação Principal -->
@@ -614,7 +590,7 @@
           <button onclick="setHistoryFilter('all')" id="hfilter-all" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-ink text-brand-fg shrink-0">Todos</button>
           <button onclick="setHistoryFilter('weight')" id="hfilter-weight" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-canvas text-muted shrink-0">⚖️ Peso (g/kg)</button>
           <button onclick="setHistoryFilter('volume')" id="hfilter-volume" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-canvas text-muted shrink-0">🧴 Líquidos (ml/L)</button>
-          <button onclick="setHistoryFilter('unit')" id="hfilter-unit" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-canvas text-muted shrink-0">🧻 Pacotes/Rolos</button>
+          <button onclick="setHistoryFilter('unit')" id="hfilter-unit" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-canvas text-muted shrink-0">Unidades</button>
         </div>
       </div>
 
@@ -731,7 +707,7 @@
     </button>
     <button type="button" onclick="setCategory('unit')" id="tab-unit" class="tab tab-btn relative" aria-current="false">
       <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="7" width="16" height="13" rx="2"/><path d="M8 7V5h8v2M9 12h6"/></svg>
-      <span class="tab-label">Pacotes</span>
+      <span class="tab-label">Unidades</span>
     </button>
     <button type="button" onclick="setCategory('history')" id="tab-history" class="tab tab-btn relative" aria-current="false">
       <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 8v5l3 2"/></svg>
@@ -859,10 +835,18 @@
     let pendingLoadListId = null;
     let poolLongPressTimer = null;
     let poolLongPressFired = false;
-    const DEFAULT_MARKETS = ['Americanas', 'Atacadão', 'Assaí', 'Carrefour', 'Extra'];
-    let savedMarkets = [...DEFAULT_MARKETS];
+    // Sem lista pronta de redes — a pessoa digita e salva os próprios atalhos
+    const LEGACY_DEFAULT_MARKETS = ['Americanas', 'Atacadão', 'Assaí', 'Carrefour', 'Extra'];
+    let savedMarkets = [];
     let marketEditMode = false;
     let renamingMarket = null;
+
+    function marketsLookLikeLegacyDefaults(list) {
+      if (!Array.isArray(list) || list.length !== LEGACY_DEFAULT_MARKETS.length) return false;
+      const normalized = list.map((m) => String(m).trim().toLowerCase()).sort();
+      const legacy = LEGACY_DEFAULT_MARKETS.map((m) => m.toLowerCase()).sort();
+      return normalized.every((v, i) => v === legacy[i]);
+    }
 
     // Atalhos rápidos de medidas para agilizar a digitação na prateleira
     const QUICK_PRESETS = {
@@ -886,14 +870,14 @@
         { label: '5 L', qty: 5, unit: 'l' }
       ],
       unit: [
-        { label: '4 un / 30m', units: 4, meters: 30 },
-        { label: '8 un / 30m', units: 8, meters: 30 },
-        { label: '12 un / 30m', units: 12, meters: 30 },
-        { label: '16 un / 30m', units: 16, meters: 30 },
-        { label: '12 un / 60m', units: 12, meters: 60 },
-        { label: '6 un (s/ metro)', units: 6, meters: '' },
-        { label: '12 un (s/ metro)', units: 12, meters: '' },
-        { label: '30 ovos', units: 30, meters: '' }
+        { label: '4 un / 30m', units: 4, measure: 30, measureUnit: 'm' },
+        { label: '8 un / 30m', units: 8, measure: 30, measureUnit: 'm' },
+        { label: '12 un / 30m', units: 12, measure: 30, measureUnit: 'm' },
+        { label: '16 un / 30m', units: 16, measure: 30, measureUnit: 'm' },
+        { label: '12 un / 60m', units: 12, measure: 60, measureUnit: 'm' },
+        { label: '6 un', units: 6, measure: '', measureUnit: 'm' },
+        { label: '12 un', units: 12, measure: '', measureUnit: 'm' },
+        { label: '30 ovos', units: 30, measure: '', measureUnit: 'm' }
       ]
     };
 
@@ -1149,7 +1133,10 @@
           const parsedMarkets = JSON.parse(rawMarkets);
           savedMarkets = Array.isArray(parsedMarkets)
             ? parsedMarkets.filter((m) => typeof m === 'string' && m.trim())
-            : [...DEFAULT_MARKETS];
+            : [];
+          if (marketsLookLikeLegacyDefaults(savedMarkets)) {
+            savedMarkets = [];
+          }
         }
         if (lastMarket && typeof lastMarket === 'string') {
           document.getElementById('marketName').value = lastMarket;
@@ -1356,7 +1343,7 @@
       if (savedMarkets.length === 0) {
         const empty = document.createElement('p');
         empty.className = 'text-[11px] text-muted';
-        empty.textContent = 'Nenhum atalho. Digite o nome e toque em + Salvar.';
+        empty.textContent = 'Nenhum mercado salvo. Digite o nome e toque em + Salvar.';
         chipsContainer.appendChild(empty);
         return;
       }
@@ -1451,64 +1438,42 @@
         document.getElementById('prodUnit').value = preset.unit;
       } else if (currentCategory === 'unit') {
         document.getElementById('packUnits').value = preset.units;
-        document.getElementById('measurePerUnit').value = preset.meters;
+        const measureVal = preset.measure != null ? preset.measure : preset.meters;
+        document.getElementById('measurePerUnit').value = measureVal === '' || measureVal == null ? '' : measureVal;
+        const measureUnitEl = document.getElementById('measureUnit');
+        if (measureUnitEl) measureUnitEl.value = preset.measureUnit || 'm';
+        updateUnitTotalHint();
       }
       document.getElementById('prodPrice').focus();
     }
 
-    function getSelectedPromoMode() {
-      const checked = document.querySelector('input[name="promoMode"]:checked');
-      return checked ? checked.value : 'leve';
-    }
-
-    function updatePromoModeUI() {
-      const mode = getSelectedPromoMode();
-      const leve = document.getElementById('promoLeveFields');
-      const atacado = document.getElementById('promoAtacadoFields');
-      const help = document.getElementById('promoHelpText');
-
-      if (mode === 'atacado') {
-        leve.classList.add('hidden');
-        leve.classList.remove('grid');
-        atacado.classList.remove('hidden');
-        atacado.classList.add('grid');
-        help.textContent = '💡 Usa o preço de atacado (a partir de X unidades) no ranking de custo-benefício.';
-      } else {
-        atacado.classList.add('hidden');
-        atacado.classList.remove('grid');
-        leve.classList.remove('hidden');
-        leve.classList.add('grid');
-        help.textContent = '💡 Calcula o valor real por unidade na promoção Leve X Pague Y.';
+    function updateUnitTotalHint() {
+      const hint = document.getElementById('unitTotalHint');
+      if (!hint) return;
+      const units = parseBRNumber(document.getElementById('packUnits').value);
+      const measure = parseBRNumber(document.getElementById('measurePerUnit').value);
+      const measureUnit = (document.getElementById('measureUnit') || {}).value || 'm';
+      if (isNaN(units) || units <= 0 || isNaN(measure) || measure <= 0) {
+        hint.classList.add('hidden');
+        hint.textContent = '';
+        return;
       }
+      const total = units * measure;
+      const unitLabel = measureUnit === 'l' ? 'L' : measureUnit;
+      hint.textContent = `Total na embalagem: ${formatNumberBR(total)} ${unitLabel} (${units} × ${formatNumberBR(measure)} ${unitLabel})`;
+      hint.classList.remove('hidden');
     }
 
-    function togglePromo() {
-      const checked = document.getElementById('promoCheck').checked;
-      const box = document.getElementById('promoBox');
-      if (checked) {
-        box.classList.remove('hidden');
-        updatePromoModeUI();
-      } else {
-        box.classList.add('hidden');
-      }
-    }
-
-    function resetPromoFields() {
-      document.getElementById('promoCheck').checked = false;
-      document.getElementById('promoTake').value = '';
-      document.getElementById('promoPay').value = '';
-      document.getElementById('atacadoMinQty').value = '';
-      document.getElementById('atacadoPrice').value = '';
-      const leveRadio = document.querySelector('input[name="promoMode"][value="leve"]');
-      if (leveRadio) leveRadio.checked = true;
-      togglePromo();
+    function formatNumberBR(n) {
+      if (n == null || isNaN(n)) return '';
+      return Number(n).toLocaleString('pt-BR', { maximumFractionDigits: 2 });
     }
 
     const LAST_TAB_KEY = 'comparador_mercado_pro_last_tab_v1';
     const COMPARE_SECTION_COPY = {
       weight: { title: 'Peso', hint: 'Comida, grãos, carnes — preço por quilo.' },
       volume: { title: 'Líquidos', hint: 'Bebidas e limpeza — preço por litro.' },
-      unit: { title: 'Pacotes', hint: 'Rolos, ovos, unidades — preço por un. ou metro.' }
+      unit: { title: 'Unidades', hint: 'Rolos, ovos, pacotes — preço por un. ou pelo tamanho (m, ml…).' }
     };
 
     function updateBottomTabVisual(cat) {
@@ -1594,8 +1559,9 @@
         standardFields.classList.add('hidden');
         standardFields.classList.remove('grid');
         unitFields.classList.remove('hidden');
-        unitFields.classList.add('grid');
-        prodName.placeholder = 'Ex: Papel higiênico 12 rolos ou bandeja 30 ovos';
+        unitFields.classList.remove('grid');
+        prodName.placeholder = 'Ex.: Papel higiênico, ovos…';
+        updateUnitTotalHint();
       }
 
       renderQuickMeasureButtons();
@@ -1618,40 +1584,9 @@
         return;
       }
 
-      // Promoção: Leve X Pague Y ou Atacado
-      const promoActive = document.getElementById('promoCheck').checked;
-      let effectivePrice = rawPrice;
-      let promoText = '';
-
-      if (promoActive) {
-        const mode = getSelectedPromoMode();
-        if (mode === 'atacado') {
-          const minQty = Math.round(parseBRNumber(document.getElementById('atacadoMinQty').value));
-          const atacadoPrice = parseBRNumber(document.getElementById('atacadoPrice').value);
-          if (isNaN(minQty) || minQty <= 0 || isNaN(atacadoPrice) || atacadoPrice <= 0) {
-            showToast('⚠️ No atacado, informe a quantidade mínima e o preço (Ex: a partir de 3 un por R$ 8,99).');
-            return;
-          }
-          if (atacadoPrice >= rawPrice) {
-            showToast('⚠️ O preço de atacado deve ser menor que o preço de prateleira.');
-            return;
-          }
-          effectivePrice = atacadoPrice;
-          const savings = ((rawPrice - atacadoPrice) / rawPrice) * 100;
-          promoText = `Atacado a partir de ${minQty} un • R$ ${formatCurrency(atacadoPrice)}/un (−${savings.toFixed(0)}% vs prateleira)`;
-        } else {
-          const take = Math.round(parseBRNumber(document.getElementById('promoTake').value));
-          const pay = Math.round(parseBRNumber(document.getElementById('promoPay').value));
-
-          if (isNaN(take) || isNaN(pay) || take <= 0 || pay <= 0 || pay >= take) {
-            showToast('⚠️ Na promoção Leve X Pague Y, preencha valores válidos (Ex: Leve 3, Pague 2).');
-            return;
-          }
-          effectivePrice = (rawPrice * pay) / take;
-          const totalPromo = rawPrice * pay;
-          promoText = `Leve ${take} Pague ${pay} • Sai a R$ ${formatCurrency(effectivePrice)}/un (Total R$ ${formatCurrency(totalPromo)})`;
-        }
-      }
+      // Preço efetivo = o que a pessoa digitou (promo já deve estar no valor da embalagem)
+      const effectivePrice = rawPrice;
+      const promoText = '';
 
       const timestamp = getFormattedDateTime();
 
@@ -1696,12 +1631,14 @@
       } else if (currentCategory === 'unit') {
         const packUnitsInput = document.getElementById('packUnits');
         const measureInput = document.getElementById('measurePerUnit');
+        const measureUnitEl = document.getElementById('measureUnit');
 
         const units = parseBRNumber(packUnitsInput.value);
         const measure = parseBRNumber(measureInput.value);
+        const measureUnit = (measureUnitEl && measureUnitEl.value) || 'm';
 
         if (isNaN(units) || units <= 0) {
-          showToast('⚠️ Informe quantas unidades ou rolos vêm no pacote.');
+          showToast('⚠️ Informe quantas unidades vêm no pacote (ex.: 4 rolos, 12 ovos).');
           packUnitsInput.focus();
           return;
         }
@@ -1710,22 +1647,40 @@
 
         if (!isNaN(measure) && measure > 0) {
           const totalMeasure = units * measure;
-          const pricePerMeasure = effectivePrice / totalMeasure;
-          item.measureSummary = `${units} un x ${measure}m`;
-          item.desc = `Pacote ${units} un x ${measure}m (${totalMeasure}m total) • R$ ${formatCurrency(rawPrice)}`;
+          let scoreBase = totalMeasure;
+          let mainSuffix = 'metro';
+          let unitLabel = 'm';
+          let totalDisplay = `${formatNumberBR(totalMeasure)} m`;
+
+          if (measureUnit === 'ml') {
+            scoreBase = totalMeasure / 1000; // litros
+            mainSuffix = 'L';
+            unitLabel = 'ml';
+            totalDisplay = `${formatNumberBR(totalMeasure)} ml (${formatNumberBR(scoreBase)} L)`;
+          } else if (measureUnit === 'l') {
+            scoreBase = totalMeasure;
+            mainSuffix = 'L';
+            unitLabel = 'L';
+            totalDisplay = `${formatNumberBR(totalMeasure)} L`;
+          }
+
+          const pricePerMeasure = effectivePrice / scoreBase;
+          item.measureSummary = `${units} un × ${formatNumberBR(measure)} ${unitLabel}`;
+          item.desc = `${units} un × ${formatNumberBR(measure)} ${unitLabel} = ${totalDisplay} • R$ ${formatCurrency(rawPrice)}`;
           item.scorePrice = pricePerMeasure;
-          item.mainLabel = `R$ ${formatCurrency(pricePerMeasure, 3)} / metro`;
-          item.subLabel = `R$ ${formatCurrency(pricePerUnit)} por rolo/un.`;
+          item.mainLabel = `R$ ${formatCurrency(pricePerMeasure, measureUnit === 'm' ? 3 : 2)} / ${mainSuffix}`;
+          item.subLabel = `R$ ${formatCurrency(pricePerUnit)} por un.`;
         } else {
           item.measureSummary = `${units} un.`;
           item.desc = `Pacote com ${units} unidades • R$ ${formatCurrency(rawPrice)}`;
           item.scorePrice = pricePerUnit;
           item.mainLabel = `R$ ${formatCurrency(pricePerUnit)} / un.`;
-          item.subLabel = `Pacote: R$ ${formatCurrency(effectivePrice)}`;
+          item.subLabel = `Embalagem: R$ ${formatCurrency(effectivePrice)}`;
         }
 
         packUnitsInput.value = '';
         measureInput.value = '';
+        updateUnitTotalHint();
       }
 
       // Registra o mercado nas sugestões e salva no estado
@@ -1758,10 +1713,9 @@
         lastPickedShoppingId = null;
       }
 
-      // Limpa apenas produto, preço e promoção (mantém o nome do mercado para o próximo item!)
+      // Limpa produto e preço (mantém o nome do mercado para o próximo item)
       nameInput.value = '';
       priceInput.value = '';
-      resetPromoFields();
 
       renderList();
       renderShoppingPickChips();
@@ -1783,7 +1737,7 @@
         return;
       }
 
-      const catLabel = currentCategory === 'weight' ? 'Peso' : currentCategory === 'volume' ? 'Líquidos' : 'Pacotes';
+      const catLabel = currentCategory === 'weight' ? 'Peso' : currentCategory === 'volume' ? 'Líquidos' : 'Unidades';
       const lines = [
         `🛒 Comparador de Mercado — ${catLabel}`,
         `📅 ${getFormattedDateTime()}`,
@@ -1918,7 +1872,7 @@
       },
       {
         title: 'Compare o preço real',
-        body: 'Use Peso (comida), Líquidos (bebidas e limpeza) ou Pacotes (rolos, ovos). Toque um item Da sua lista para preencher o nome.'
+        body: 'Use Peso (comida), Líquidos (bebidas) ou Unidades (rolos, ovos). Toque um item Da sua lista para preencher o nome.'
       },
       {
         title: 'Só neste aparelho — e na tela inicial',
@@ -1973,7 +1927,7 @@
     function getDefaultProductName(cat, index) {
       if (cat === 'weight') return `Produto Peso #${index}`;
       if (cat === 'volume') return `Produto Líquido #${index}`;
-      return `Pacote/Unidade #${index}`;
+      return `Produto Unidades #${index}`;
     }
 
     function formatCurrency(val, decimals = 2) {
@@ -2104,7 +2058,7 @@
         } else if (currentCategory === 'volume') {
           exampleText = 'Exemplo: Compare <b>líquidos e bebidas</b> de <b>200ml</b>, <b>480ml</b>, <b>1 L</b> e <b>2 L</b>.';
         } else {
-          exampleText = 'Exemplo: Compare <b>pacotes</b> de papel higiênico (<b>4 a 16 rolos</b>) ou ovos, informando a quantidade.';
+          exampleText = 'Exemplo: Compare papel higiênico (<b>4 a 16 rolos</b> × metros) ou ovos (só a quantidade).';
         }
 
         container.innerHTML = `
@@ -2233,7 +2187,7 @@
       const categoryIcons = {
         weight: '⚖️ Peso',
         volume: '🧴 Líquidos',
-        unit: '🧻 Pacotes'
+        unit: 'Unidades'
       };
 
       container.innerHTML = filtered.map(item => {
