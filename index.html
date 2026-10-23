@@ -361,9 +361,6 @@
     }
 
     #quickMeasures button,
-    #marketChipsContainer button,
-    #marketAddBtn,
-    #marketEditToggle,
     #historyFilterChips button,
     .result-actions button,
     .history-actions button,
@@ -371,13 +368,10 @@
       min-height: 44px;
       font-size: 13px;
     }
-    #quickMeasures button,
-    #marketAddBtn,
-    #marketEditToggle {
+    #quickMeasures button {
       padding-left: 12px;
       padding-right: 12px;
     }
-    #marketChipsContainer button { padding-left: 12px; padding-right: 10px; }
     .qty-btn { width: 44px; height: 44px; }
     #shoppingPickChips button,
     #productPoolChips button,
@@ -631,60 +625,22 @@
       <!-- Card de Formulário -->
       <div id="compareForm" class="bg-surface rounded-2xl p-4 shadow-sm border border-line mb-4">
         
-        <!-- Campo: Nome do Mercado -->
+        <!-- Campo: Nome do Mercado (opcional) -->
         <div class="mb-3">
-          <label for="marketName" class="block text-[13px] font-bold text-ink mb-1">Nome do mercado</label>
-          <div class="flex gap-2">
-            <input 
-              type="text" 
-              id="marketName" 
-              list="marketSuggestions"
-              placeholder="Ex.: mercado da esquina, Assaí..." 
-              enterkeyhint="done"
-              autocomplete="off"
-              class="min-w-0 flex-1 px-3 py-2.5 rounded-xl border border-line text-base font-medium focus:outline-none focus:border-brand focus:ring-2 focus:ring-brand/20 bg-soft focus:bg-surface transition"
-            >
-            <button 
-              type="button" 
-              onclick="clearMarketInput()" 
-              title="Trocar de mercado"
-              class="shrink-0 min-h-11 px-3 rounded-xl border border-line bg-soft text-[13px] font-bold text-ink"
-            >
-              Trocar
-            </button>
-          </div>
+          <label for="marketName" class="block text-[13px] font-bold text-ink mb-1">
+            Mercado <span class="font-normal text-muted">(opcional)</span>
+          </label>
+          <input 
+            type="text" 
+            id="marketName" 
+            list="marketSuggestions"
+            placeholder="Se quiser, digite o nome" 
+            enterkeyhint="next"
+            autocomplete="off"
+            class="w-full px-3 py-2.5 rounded-xl border border-line text-base font-medium focus:outline-none focus:border-brand focus:ring-2 focus:ring-brand/20 bg-soft focus:bg-surface transition"
+          >
           <datalist id="marketSuggestions"></datalist>
-
-          <div class="flex items-center justify-between gap-2 mt-2">
-            <p class="text-[11px] font-bold text-muted">Seus mercados</p>
-            <div class="flex items-center gap-1.5">
-              <button
-                type="button"
-                id="marketAddBtn"
-                onclick="addOrRenameMarketFromInput()"
-                class="rounded-xl bg-brand-soft text-brand-ink border border-brand-mid"
-              >
-                + Salvar
-              </button>
-              <button
-                type="button"
-                id="marketEditToggle"
-                onclick="toggleMarketEditMode()"
-                class="rounded-xl bg-canvas text-muted border border-line"
-                aria-pressed="false"
-              >
-                Editar
-              </button>
-            </div>
-          </div>
-          <p id="marketEditHint" class="hidden text-[13px] text-muted mt-1 leading-snug">
-            Toque ✎ para renomear ou × para apagar. Pode remover qualquer sugestão padrão.
-          </p>
-
-          <!-- Chips Rápidos de Mercados -->
-          <div id="marketChipsContainer" class="flex items-center gap-1.5 overflow-x-auto no-scrollbar mt-2 pt-0.5">
-            <!-- Preenchido via JS -->
-          </div>
+          <p class="text-[13px] text-muted mt-1.5 leading-snug">Pode deixar em branco. Se você já digitou um mercado antes, ele aparece ao tocar no campo.</p>
         </div>
 
         <!-- Campo: Nome do Produto / Marca -->
@@ -1159,11 +1115,10 @@
     let pendingLoadListId = null;
     let poolLongPressTimer = null;
     let poolLongPressFired = false;
-    // Sem lista pronta de redes — a pessoa digita e salva os próprios atalhos
+    // Nomes que o próprio app inventava. Não são um mercado de verdade.
     const LEGACY_DEFAULT_MARKETS = ['Americanas', 'Atacadão', 'Assaí', 'Carrefour', 'Extra'];
+    const PLACEHOLDER_MARKET = 'Mercado não informado';
     let savedMarkets = [];
-    let marketEditMode = false;
-    let renamingMarket = null;
 
     function marketsLookLikeLegacyDefaults(list) {
       if (!Array.isArray(list) || list.length !== LEGACY_DEFAULT_MARKETS.length) return false;
@@ -1469,8 +1424,8 @@
             savedMarkets = [];
           }
         }
-        if (lastMarket && typeof lastMarket === 'string') {
-          document.getElementById('marketName').value = lastMarket;
+        if (lastMarket && storedMarketName(lastMarket)) {
+          document.getElementById('marketName').value = storedMarketName(lastMarket);
         }
       } catch (e) {
         console.error('Erro ao ler localStorage:', e);
@@ -1481,6 +1436,7 @@
         productPool = [];
       }
       seedProductPoolFromKnownSources(true);
+      rememberMarketsFromSavedItems();
       updateHistoryBadge();
       updateListBadge();
       renderMarketSuggestions();
@@ -1543,10 +1499,27 @@
       return new Date(+m[3], +m[2] - 1, +m[1], +(m[4] || 0), +(m[5] || 0)).getTime();
     }
 
-    // Gerenciar lista de mercados sugeridos e chips clicáveis
+    // Nome real digitado pela pessoa. Vazio e o texto antigo inventado não contam.
+    function storedMarketName(value) {
+      const name = String(value || '').trim();
+      if (!name || name === PLACEHOLDER_MARKET) return '';
+      return name;
+    }
+
+    // Na comparação, cada item sem mercado vira Opção 1, Opção 2… Os que têm nome continuam com o nome.
+    function marketLabelsForList(list) {
+      let unnamed = 0;
+      return (list || []).map((item) => {
+        const real = storedMarketName(item && item.market);
+        if (real) return real;
+        unnamed += 1;
+        return 'Opção ' + unnamed;
+      });
+    }
+
     function registerMarketName(marketName) {
-      const clean = marketName.trim();
-      if (!clean || clean === 'Mercado não informado') return;
+      const clean = storedMarketName(marketName);
+      if (!clean) return;
       const existsIndex = savedMarkets.findIndex(m => m.toLowerCase() === clean.toLowerCase());
       if (existsIndex !== -1) {
         savedMarkets.splice(existsIndex, 1);
@@ -1554,184 +1527,52 @@
       savedMarkets.unshift(clean);
       if (savedMarkets.length > 16) savedMarkets = savedMarkets.slice(0, 16);
       renderMarketSuggestions();
-      saveToStorage();
     }
 
-    function toggleMarketEditMode() {
-      marketEditMode = !marketEditMode;
-      if (!marketEditMode) {
-        renamingMarket = null;
-        syncMarketActionButton();
-      }
-      const toggle = document.getElementById('marketEditToggle');
-      const hint = document.getElementById('marketEditHint');
-      if (toggle) {
-        toggle.setAttribute('aria-pressed', marketEditMode ? 'true' : 'false');
-        toggle.textContent = marketEditMode ? 'Concluir' : 'Editar';
-        toggle.className = marketEditMode
-          ? 'rounded-xl bg-brand text-brand-fg border border-brand'
-          : 'rounded-xl bg-canvas text-muted border border-line';
-      }
-      if (hint) hint.classList.toggle('hidden', !marketEditMode);
-      renderMarketSuggestions();
-    }
+    function rememberMarketsFromSavedItems() {
+      const found = [];
+      const push = (name) => {
+        const clean = storedMarketName(name);
+        if (!clean) return;
+        if (found.some(m => m.toLowerCase() === clean.toLowerCase())) return;
+        found.push(clean);
+      };
+      ['weight', 'volume', 'unit'].forEach((cat) => {
+        (items[cat] || []).forEach((item) => push(item.market));
+      });
+      historyItems.forEach((item) => push(item.market));
+      shoppingList.forEach((item) => push(item.market));
+      savedLists.forEach((list) => {
+        (list.items || []).forEach((item) => push(item.market));
+      });
 
-    function syncMarketActionButton() {
-      const btn = document.getElementById('marketAddBtn');
-      if (!btn) return;
-      if (renamingMarket) {
-        btn.textContent = '✓ Renomear';
-        btn.className = 'rounded-xl bg-brand text-brand-fg border border-brand';
-      } else {
-        btn.textContent = '+ Salvar';
-        btn.className = 'rounded-xl bg-brand-soft text-brand-ink border border-brand-mid';
-      }
-    }
-
-    function addOrRenameMarketFromInput() {
-      const input = document.getElementById('marketName');
-      const clean = (input.value || '').trim();
-      if (!clean) {
-        showToast('Digite o nome do mercado (ex.: Americanas).');
-        input.focus();
-        return;
-      }
-
-      if (renamingMarket) {
-        const idx = savedMarkets.findIndex(m => m.toLowerCase() === renamingMarket.toLowerCase());
-        if (idx === -1) {
-          renamingMarket = null;
-          syncMarketActionButton();
-          registerMarketName(clean);
-          showToast(`Mercado salvo: ${clean}`);
-          return;
+      const before = JSON.stringify(savedMarkets);
+      savedMarkets = savedMarkets.map((m) => storedMarketName(m)).filter(Boolean);
+      const seen = new Set();
+      savedMarkets = savedMarkets.filter((name) => {
+        const key = name.toLowerCase();
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+      found.forEach((name) => {
+        if (!seen.has(name.toLowerCase())) {
+          seen.add(name.toLowerCase());
+          savedMarkets.push(name);
         }
-        const duplicate = savedMarkets.some((m, i) => i !== idx && m.toLowerCase() === clean.toLowerCase());
-        if (duplicate) {
-          showToast('Já existe um mercado com esse nome.');
-          return;
-        }
-        const oldName = savedMarkets[idx];
-        savedMarkets[idx] = clean;
-        renamingMarket = null;
-        syncMarketActionButton();
-        input.value = clean;
-        localStorage.setItem(STORAGE_KEY_LAST_MARKET, clean);
-        saveToStorage();
-        renderMarketSuggestions();
-        suggestPaletteForMarket(clean);
-        showToast(`Renomeado: ${oldName} → ${clean}`);
-        return;
+      });
+      if (savedMarkets.length > 16) savedMarkets = savedMarkets.slice(0, 16);
+      if (JSON.stringify(savedMarkets) !== before) {
+        try {
+          localStorage.setItem(STORAGE_KEY_MARKETS, JSON.stringify(savedMarkets));
+        } catch (e) {}
       }
-
-      registerMarketName(clean);
-      localStorage.setItem(STORAGE_KEY_LAST_MARKET, clean);
-      suggestPaletteForMarket(clean);
-      showToast(`Mercado salvo: ${clean}`);
-    }
-
-    function startRenameMarket(name) {
-      renamingMarket = name;
-      const input = document.getElementById('marketName');
-      input.value = name;
-      input.focus();
-      input.select();
-      if (!marketEditMode) toggleMarketEditMode();
-      syncMarketActionButton();
-      showToast('Edite o nome e toque em Renomear.');
-    }
-
-    function deleteMarket(name) {
-      openConfirmModal(
-        'Apagar este mercado?',
-        `"${name}" sai dos atalhos. Seus preços salvos no Histórico continuam intactos.`,
-        () => {
-          savedMarkets = savedMarkets.filter(m => m.toLowerCase() !== name.toLowerCase());
-          if (renamingMarket && renamingMarket.toLowerCase() === name.toLowerCase()) {
-            renamingMarket = null;
-            syncMarketActionButton();
-          }
-          const input = document.getElementById('marketName');
-          if (input.value.trim().toLowerCase() === name.toLowerCase()) {
-            input.value = '';
-            localStorage.setItem(STORAGE_KEY_LAST_MARKET, '');
-          }
-          saveToStorage();
-          renderMarketSuggestions();
-          showToast(`Removido: ${name}`);
-        },
-        'Sim, apagar'
-      );
     }
 
     function renderMarketSuggestions() {
       const datalist = document.getElementById('marketSuggestions');
-      const chipsContainer = document.getElementById('marketChipsContainer');
-
+      if (!datalist) return;
       datalist.innerHTML = savedMarkets.map(m => `<option value="${escapeHtml(m)}">`).join('');
-      chipsContainer.innerHTML = '';
-
-      if (savedMarkets.length === 0) {
-        const empty = document.createElement('p');
-        empty.className = 'text-[13px] text-muted';
-        empty.textContent = 'Nenhum mercado salvo. Digite o nome e toque em + Salvar.';
-        chipsContainer.appendChild(empty);
-        return;
-      }
-
-      savedMarkets.forEach((m) => {
-        const wrap = document.createElement('div');
-        wrap.className = 'shrink-0 inline-flex items-center gap-0.5 rounded-full border border-line bg-canvas overflow-hidden';
-
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'text-[13px] font-semibold pl-3 pr-2 text-ink hover:bg-brand-soft hover:text-brand-ink transition';
-        btn.textContent = '🏪 ' + m;
-        btn.addEventListener('click', () => selectMarketChip(m));
-        wrap.appendChild(btn);
-
-        if (marketEditMode) {
-          const renameBtn = document.createElement('button');
-          renameBtn.type = 'button';
-          renameBtn.className = 'text-[13px] font-bold px-2 text-brand-ink hover:bg-brand-soft';
-          renameBtn.setAttribute('aria-label', 'Renomear ' + m);
-          renameBtn.textContent = '✎';
-          renameBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            startRenameMarket(m);
-          });
-
-          const delBtn = document.createElement('button');
-          delBtn.type = 'button';
-          delBtn.className = 'text-[13px] font-bold px-2 text-danger hover:bg-danger-soft';
-          delBtn.setAttribute('aria-label', 'Apagar ' + m);
-          delBtn.textContent = '×';
-          delBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            deleteMarket(m);
-          });
-
-          wrap.appendChild(renameBtn);
-          wrap.appendChild(delBtn);
-        }
-
-        chipsContainer.appendChild(wrap);
-      });
-    }
-
-    function selectMarketChip(name) {
-      const input = document.getElementById('marketName');
-      input.value = name;
-      localStorage.setItem(STORAGE_KEY_LAST_MARKET, name);
-      suggestPaletteForMarket(name);
-    }
-
-    function clearMarketInput() {
-      const input = document.getElementById('marketName');
-      input.value = '';
-      renamingMarket = null;
-      syncMarketActionButton();
-      input.focus();
     }
 
     // Renderiza os botões de atalho de medidas (400g, 800g, 1kg, 320ml, 12 rolos, etc.)
@@ -1967,7 +1808,7 @@
       if (list.length === 1) {
         dock.classList.add('is-pending');
         if (kicker) kicker.textContent = 'Só 1 produto';
-        if (name) name.textContent = best.name || 'Produto';
+        if (name) name.textContent = `${best.name || 'Produto'} · ${marketLabelsForList(list)[0]}`;
         if (note) note.textContent = 'Adicione outro para ver o mais barato.';
         if (price) price.textContent = best.mainLabel || '';
       } else {
@@ -1976,7 +1817,7 @@
           ? ((list[1].scorePrice - best.scorePrice) / best.scorePrice) * 100
           : 0;
         if (kicker) kicker.textContent = 'Mais barato';
-        if (name) name.textContent = `${best.name || 'Produto'} · ${best.market || ''}`.replace(/ · $/, '');
+        if (name) name.textContent = `${best.name || 'Produto'} · ${marketLabelsForList(list)[0]}`;
         if (note) {
           note.textContent = vsSecond < 0.5
             ? 'Quase o mesmo preço do 2º'
@@ -2003,7 +1844,7 @@
       const nameInput = document.getElementById('prodName');
       const priceInput = document.getElementById('prodPrice');
 
-      const marketName = marketInput.value.trim() || 'Mercado não informado';
+      const marketName = storedMarketName(marketInput.value);
       const rawPrice = parseBRNumber(priceInput.value);
 
       if (isNaN(rawPrice) || rawPrice <= 0) {
@@ -2122,7 +1963,9 @@
           savedAt: getFormattedDateTime()
         };
         historyItems.unshift(historyEntry);
-        showToast(`✅ Adicionado e salvo no Histórico (${marketName})!`);
+        showToast(marketName
+          ? `✅ Adicionado e salvo no Histórico (${marketName})!`
+          : '✅ Adicionado e salvo no Histórico!');
       } else {
         showToast(`✅ Adicionado na comparação!`);
       }
@@ -2171,9 +2014,10 @@
         ''
       ];
 
+      const marketLabels = marketLabelsForList(list);
       list.forEach((item, index) => {
         const rank = index === 0 ? '🏆' : `${index + 1}.`;
-        lines.push(`${rank} ${item.name} (${item.market})`);
+        lines.push(`${rank} ${item.name} (${marketLabels[index]})`);
         lines.push(`   ${item.mainLabel} • ${item.measureSummary || ''}`);
         if (item.promoText) lines.push(`   ${item.promoText}`);
         lines.push('');
@@ -2403,7 +2247,9 @@
 
       historyItems.unshift(historyEntry);
       saveToStorage();
-      showToast(`💾 Salvo no Histórico: ${item.name} (${item.market}) em ${exactNow}`);
+      showToast(storedMarketName(item.market)
+        ? `💾 Salvo no Histórico: ${item.name} (${item.market}) em ${exactNow}`
+        : `💾 Salvo no Histórico: ${item.name} em ${exactNow}`);
     }
 
     // Enviar um item antigo do Histórico de volta para a disputa atual na prateleira
@@ -2421,7 +2267,9 @@
       items[targetCategory].push(clonedItem);
       saveToStorage();
       setCategory(targetCategory);
-      showToast(`🔄 "${hItem.name}" (${hItem.market}) entrou na comparação atual!`);
+      showToast(storedMarketName(hItem.market)
+        ? `🔄 "${hItem.name}" (${hItem.market}) entrou na comparação atual!`
+        : `🔄 "${hItem.name}" entrou na comparação atual!`);
     }
 
     function removeProduct(id) {
@@ -2500,6 +2348,7 @@
       }
 
       const bestScore = list[0].scorePrice;
+      const marketLabels = marketLabelsForList(list);
 
       container.innerHTML = list.map((item, index) => {
         const isBest = index === 0 && list.length > 1;
@@ -2522,7 +2371,7 @@
           rankBadge = '<span class="pill pill-wait">Adicione outro para comparar</span>';
         }
 
-        const marketBadge = `<span class="pill pill-market">${escapeHtml(item.market)}</span>`;
+        const marketBadge = `<span class="pill ${storedMarketName(item.market) ? 'pill-market' : 'pill-muted'}">${escapeHtml(marketLabels[index])}</span>`;
         const promoBadge = item.promoText ? '<span class="pill pill-info">Promoção</span>' : '';
         const historyTag = item.fromHistory ? '<span class="pill pill-muted">Do histórico</span>' : '';
         const safeName = escapeHtml(item.name);
@@ -2593,7 +2442,7 @@
         container.innerHTML = `
           <div class="empty-card">
             <p class="empty-title">Nenhum preço salvo</p>
-            <p class="empty-body">Na comparação, toque em <b>Salvar</b> ou em <b>Adicionar e salvar no histórico</b>. Fica o preço, o mercado e o horário.</p>
+            <p class="empty-body">Na comparação, toque em <b>Salvar</b> ou em <b>Adicionar e salvar no histórico</b>. Fica o preço, o horário e o mercado, se você tiver digitado.</p>
           </div>
         `;
         return;
@@ -2612,7 +2461,7 @@
         return `
           <article class="result-card">
             <div class="result-card-head">
-              <span class="pill pill-market">${escapeHtml(item.market)}</span>
+              ${storedMarketName(item.market) ? `<span class="pill pill-market">${escapeHtml(storedMarketName(item.market))}</span>` : ''}
               <span class="pill pill-muted">${catBadge}</span>
               <span class="result-time">${escapeHtml(displayDate)}</span>
             </div>
@@ -3282,7 +3131,7 @@
           : 'bg-surface border-brand-mid';
         const nameTone = isCart ? 'text-muted line-through' : 'text-ink';
         const metaBits = [];
-        if (item.market) metaBits.push(escapeHtml(item.market));
+        if (storedMarketName(item.market)) metaBits.push(escapeHtml(storedMarketName(item.market)));
         if (item.measureSummary) metaBits.push(escapeHtml(item.measureSummary));
         const hasPrice = Number(item.effectivePrice) > 0;
 
@@ -3378,7 +3227,7 @@
               <div class="rounded-xl border border-line p-3">
                 <div class="flex items-center justify-between gap-2 mb-1">
                   <span class="pill pill-muted">${escapeHtml(item.savedAt || item.dateTime || '')}</span>
-                  <span class="pill pill-market">${escapeHtml(item.market)}</span>
+                  ${storedMarketName(item.market) ? `<span class="pill pill-market">${escapeHtml(storedMarketName(item.market))}</span>` : ''}
                 </div>
                 <div class="flex items-center justify-between gap-2">
                   <div class="text-sm font-black text-ink">${escapeHtml(item.mainLabel)}</div>
@@ -3489,7 +3338,11 @@
                 productPool = normalizeProductPool(data.productPool);
               }
               if (Array.isArray(data.savedMarkets)) {
-                savedMarkets = data.savedMarkets.filter(m => typeof m === 'string');
+                savedMarkets = data.savedMarkets
+                  .filter(m => typeof m === 'string')
+                  .map(m => storedMarketName(m))
+                  .filter(Boolean);
+                if (marketsLookLikeLegacyDefaults(savedMarkets)) savedMarkets = [];
               }
               seedProductPoolFromKnownSources(false);
               saveToStorage();
@@ -3534,7 +3387,7 @@
             historyItems.unshift({
               savedId: Date.now() + i + Math.floor(Math.random() * 1000),
               savedAt: cols[idx('data')] || cols[0] || getFormattedDateTime(),
-              market: cols[idx('mercado')] || cols[1] || 'Mercado não informado',
+              market: storedMarketName(cols[idx('mercado')] || cols[1] || ''),
               name,
               category: cols[idx('categoria')] || 'weight',
               measureSummary: cols[idx('medida')] || '',
@@ -3591,7 +3444,6 @@
       setInterval(updateHeaderClock, 30000);
       loadFromStorage();
       syncThemeControls();
-      syncMarketActionButton();
       persistTheme();
 
       let initialTab = 'list';
@@ -3609,8 +3461,12 @@
         marketInput.addEventListener('keydown', (e) => {
           if (e.key === 'Enter') {
             e.preventDefault();
-            addOrRenameMarketFromInput();
+            const next = document.getElementById('prodName');
+            if (next) next.focus();
           }
+        });
+        marketInput.addEventListener('change', () => {
+          if (storedMarketName(marketInput.value)) suggestPaletteForMarket(marketInput.value);
         });
         if (marketInput.value.trim()) {
           suggestPaletteForMarket(marketInput.value);
